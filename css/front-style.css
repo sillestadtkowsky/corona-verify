@@ -39,14 +39,13 @@ text-align: center;
 text-transform: capitalize;
 }
 
-table {
+.corona-mitarbeiter-container > table {
     display: inline-table;
     margin: 1em;
     border: solid 2px lightgray;
 }
-table th,
+.corona-mitarbeiter-container > table th,
 table td {
-  border: solid 1px lightgray;
   text-align: left;
 }
 
