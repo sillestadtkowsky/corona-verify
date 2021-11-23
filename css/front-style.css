@@ -9,6 +9,31 @@ Tuts Form Wrap Styles
 
 .corona-verify-form { padding:30px; display:block; border:1px solid #ccc;font-family: arial; font-size:12px}
 
+.tableContainer {
+    height: 200px;
+    overflow: auto;
+    margin: 10px;;
+}
+.divTable {
+    display: table;
+    position: relative;
+}
+.divRow {
+    display: table-row;
+}
+.divCell {
+    display: table-cell;
+    padding: 10px;
+    background-color: white;
+}
+.header {
+    font-weight: bold;
+    background-color: lightgray !important;
+}
+.headerRow {
+    background-color: lightgray !important;
+}
+
 /*
 
 Tuts Form Heading
@@ -37,17 +62,6 @@ margin: 0 0 20px;
 text-align: center;
 
 text-transform: capitalize;
-}
-
-table {
-    display: inline-table;
-    margin: 1em;
-    border: solid 2px lightgray;
-}
-table th,
-table td {
-  border: solid 1px lightgray;
-  text-align: left;
 }
 
 .collapse {
