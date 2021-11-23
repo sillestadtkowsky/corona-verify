@@ -39,15 +39,34 @@ text-align: center;
 text-transform: capitalize;
 }
 
+table {
+    display: inline-table;
+    margin: 1em;
+    border: solid 2px lightgray;
+}
+table th,
+table td {
+  border: solid 1px lightgray;
+  text-align: left;
+}
+
+.collapse {
+    border-collapse: collapse;
+}
 /*
 
 Tuts Form Text Styles
-
 */
-.corona-txt {
-display: block;
-margin: 0 0 20px;
+.corona-mitarbeiter-container{
+    min-width: 50%;
 }
+
+.corona-txt {
+    display: block;
+    font-size: 1.2em;
+    margin: 20px;
+}
+
 .corona-txt:after{clear:both; display:block; overflow:hidden; content:""}
 .corona-txt > label {
 
