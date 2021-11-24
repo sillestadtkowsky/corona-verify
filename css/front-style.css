@@ -1,11 +1,6 @@
 /*******************************
-Tuts Form Plugin Styles
+Corona-Verify Styles
 ********************************/
-
-/*
-Tuts Form Wrap Styles
-
-*/
 
 .corona-verify-form { padding:30px; display:block; border:1px solid #ccc;font-family: arial; font-size:12px}
 
@@ -34,43 +29,50 @@ Tuts Form Wrap Styles
     background-color: lightgray !important;
 }
 
-/*
-
-Tuts Form Heading
-
-*/
-.corna-verify-heading {
-
-font-family: arial;
-
-font-weight:700;
-
-text-transform:capitalize;
-
-}
 
 .corna-verify-heading {
-
-display: block;
-
-font-family: arial;
-
-font-weight: 700; font-size:24px;
-
-margin: 0 0 20px;
-
-text-align: center;
-
-text-transform: capitalize;
+    display: block;
+    font-family: arial;
+    font-weight: 700; font-size:24px;
+    margin: 0 0 20px;
+    text-align: center;
 }
-
+.qr {
+    text-align: center;
+    margin:10px;
+    padding: 5px;
+}
+.ergebnis{
+    margin: auto;
+}
+.positiv {
+    display: grid;
+}
+.negativ {
+    display: grid;
+}
+.negativ:before {
+    font-family: "Font Awesome 6 Free"; font-weight: 900; content: "\f00c";
+    font-size: 4.0em;
+    color: green; 
+}
+.positiv:before {
+    font-family: "Font Awesome 6 Free"; font-weight: 900; content: "\f057";
+    font-size: 4.0em;
+    color: red;
+}
+.expired {
+    display: grid;
+}
+.expired:before{
+    font-family: "Font Awesome 6 Free"; font-weight: 900; content: "\f256";
+    font-size: 4.0em;
+    color: red;
+}
 .collapse {
     border-collapse: collapse;
 }
-/*
 
-Tuts Form Text Styles
-*/
 .corona-mitarbeiter-container{
     min-width: 50%;
 }
@@ -83,45 +85,25 @@ Tuts Form Text Styles
 
 .corona-txt:after{clear:both; display:block; overflow:hidden; content:""}
 .corona-txt > label {
-
-float: left;
-
-width: 180px;
-
+    float: left;
+    width: 180px;
 }
 .corona-txt > input { border:1px solid #ccc; padding:8px 5px; width:300px; }
 
-/*
 
-Tuts Form Button
-
-*/
 .corona-verify-form .button {
-
-background: #ccc none repeat scroll 0 0;
-
-border: 1px solid #ccc;
-
-border-radius: 0; text-transform:uppercase; font-size:15px;font-family: arial;
-
-padding: 10px 20px;
-
+    background: #ccc none repeat scroll 0 0;
+    border: 1px solid #ccc;
+    border-radius: 0; text-transform:uppercase; font-size:15px;font-family: arial;
+    padding: 10px 20px;
 }
 .corona-verify-form .button:hover {
-
-background: #000 none repeat scroll 0 0;
-
-border: 1px solid #000;
-
-border-radius: 0;
-
-padding: 10px 20px;
+    background: #000 none repeat scroll 0 0;
+    border: 1px solid #000;
+    border-radius: 0;
+    padding: 10px 20px;
 }
 .corona-registration-form .error{
-
-color:red;
-
-margin-bottom: 18px;
-
+    color:red;
+    margin-bottom: 18px;
 }
-/********* End of Tuts Stylesheet *************/
