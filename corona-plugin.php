@@ -130,8 +130,6 @@ function generateQR($persId, $testId){
   $chl = urlencode($permaLink);
   $choe = "UTF-8";
   $qrcode = 'https://chart.googleapis.com/chart?cht=' . $cht . '&chs=' . $chs . '&chl=' . $permaLink . '&choe=' . $choe;
-  
-  echo $permaLink;
 
   return '<img src="' .$qrcode. '" alt="Verifizierungslink QR ">';
 }
