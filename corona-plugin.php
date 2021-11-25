@@ -1,4 +1,5 @@
 <?php
+ob_start();
 /**
 *
 * Plugin Name:       Corona Test Verifyer
@@ -326,7 +327,7 @@ function corona_admin_menu_employees() {
     echo '<div class="wrap"><h3>Einen Mitarbeiter erfassen</h3></div>';
     echo '<form method="POST">';
     echo '<div class=""><div class="divTable"><div class="divRow">';
-    $blogusers = get_users( array( 'role__in' => array( 'subscriber' ) ) );
+    $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
     echo '<div class="divCell"><b>Mitarbeiter </b><select placeholder="Mitarbeiter" name="id" id="id">';
     echo '<option value=""></option>';
     foreach ( $blogusers as $user ) {
