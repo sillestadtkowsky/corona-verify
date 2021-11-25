@@ -94,16 +94,45 @@ function is_logged_in(){
   }
 }
 
+function encrypt($string, $key) {
+  $result = '';
+
+  for($i = 0; $i < strlen($string); $i++) {
+      $char = substr($string, $i, 1);
+      $keychar = substr($key, ($i % strlen($key)) - 1, 1);
+      $char = chr(ord($char) + ord($keychar));
+      $result .= $char;
+  }
+  return rtrim(strtr(base64_encode($result), '+/', '-_'), '=');
+}
+
+function decrypt($string, $key) {
+  $result = '';
+  $string =  base64_decode(str_pad(strtr($string, '-_', '+/'), strlen($string) % 4, '=', 1));
+
+  for($i = 0; $i < strlen($string); $i++) {
+      $char = substr($string, $i, 1);
+      $keychar = substr($key, ($i % strlen($key)) - 1, 1);
+      $char = chr(ord($char) - ord($keychar));
+      $result .= $char;
+  }
+
+  return $result;
+}
+
+
 function generateQR($persId, $testId){
   $cht = "qr";
   $chs = "300x300";
-  $params = '?persId=' . $persId . '&testId=' .$testId;
-  $permaLink = get_permalink() . $params;
+  $params = 'persId=' . $persId . '&testId=' .$testId;
+  $verschluessseln= encrypt($params, "osowsky");
+  $permaLink = get_permalink() . '?ident=' . $verschluessseln;
   $chl = urlencode($permaLink);
   $choe = "UTF-8";
+  $qrcode = 'https://chart.googleapis.com/chart?cht=' . $cht . '&chs=' . $chs . '&chl=' . $permaLink . '&choe=' . $choe;
   
-  $qrcode = 'https://chart.googleapis.com/chart?cht=' . $cht . '&chs=' . $chs . '&chl=' . $chl . '&choe=' . $choe;
-  
+  echo $permaLink;
+
   return '<img src="' .$qrcode. '" alt="Verifizierungslink QR ">';
 }
 
@@ -119,13 +148,19 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
     $qr = $a['qr'];
   }
   
-  $personId = get_query_var('persId', -1 );
-  $testId = get_query_var( 'testId', -1 );
-  if($personId == -1 || $testId == -1){
+  $ident = $_GET['ident'] ?? 'null';
+  
+  if($ident === 'null'){
     $personId = call_user_func('is_logged_in');
+  }else{
+    $lesbar = decrypt($ident, "osowsky");
+    $paramPersId = explode("&", $lesbar)[0];
+    $personId = explode("=", $paramPersId )[1];
+    $paramTestId = explode("&", $lesbar)[1];
+    $testId = explode("=", $paramTestId)[1];
   }
 
-$sql = "SELECT cv_employeee.persID as persID, cv_employeee.vorname as vorname, cv_employeee.name as name, 
+  $sql = "SELECT cv_employeee.persID as persID, cv_employeee.vorname as vorname, cv_employeee.name as name, 
           cv_employeee.status as status,
           cv_test_for_employee.id as testId, DATE_FORMAT(cv_test_for_employee.dateTime, '%d.%m.%Y') as datum , 
           DATE_FORMAT(cv_test_for_employee.dateTime, '%H:%i') as zeit, cv_test_for_employee.ergebnis as ergebnis, 
