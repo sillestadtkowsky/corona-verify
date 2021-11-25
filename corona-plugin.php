@@ -3,23 +3,18 @@ ob_start();
 /**
 *
 * Plugin Name:       Corona Test Verifyer
-* Plugin URI:        https://example.com/plugins/the-basics/
+* Plugin URI:        https://osowsky-webdesign.de/cms/plugins
 * Description:       Quittiert das Ergebnis eines durchgeführten Test
-* Version:           1.0.1
+* Version:           1.1.2
 * Requires at least: 5.2
 * Requires PHP:      7.2
 * Author:            Silvio Osowsky
 * Author URI:        https://osowsky-webdesign.de
 * License:           GPL v2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
-* Text Domain:       sille-basic-plugin
+* Text Domain:       osowsky-design-plugin
 */
 date_default_timezone_set('Europe/Athens') ; 
-/**
- * Font Awesome CDN Setup Webfont
- * 
- * This will load Font Awesome from the Font Awesome Free or Pro CDN.
- */
 
 if (! function_exists('fa_custom_setup_cdn_webfont') ) {
   function fa_custom_setup_cdn_webfont($cdn_url = '', $integrity = null) {
@@ -120,7 +115,6 @@ function decrypt($string, $key) {
 
   return $result;
 }
-
 
 function generateQR($persId, $testId){
   $cht = "qr";
@@ -234,7 +228,7 @@ function corona_admin_menu_employees_CoronaTest() {
   echo '<div class="wrap"><h3>Einen Corona Test erfassen</h3></div>';
   echo '<form method="POST">';
   echo '<div class=""><div class="divTable"><div class="divRow">';
-  $blogusers = get_users( array( 'role__in' => array( 'subscriber' ) ) );
+  $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
   // Array of WP_User objects.
   echo '<div class="divCell"><b>Mitarbeiter </b><select placeholder="Mitarbeiter" name="id" id="id">';
   echo '<option value=""></option>';
@@ -258,7 +252,7 @@ function corona_admin_menu_employees_CoronaTest() {
       
   $sql = "SELECT cv_employeee.persID, cv_employeee.vorname as vorname, cv_employeee.name as name, 
           cv_employeee.status as status,
-          cv_test_for_employee.persId as persID, DATE_FORMAT(cv_test_for_employee.dateTime, '%d.%m.%Y') as datum , 
+          cv_test_for_employee.id as id, cv_test_for_employee.persId as persID, DATE_FORMAT(cv_test_for_employee.dateTime, '%d.%m.%Y') as datum , 
           DATE_FORMAT(cv_test_for_employee.dateTime, '%H:%i')  as zeit, cv_test_for_employee.ergebnis as ergebnis, 
           cv_test_for_employee.symptom as symptom , 
           DATE_FORMAT(cv_test_for_employee.dateExpired, '%d.%m.%Y') as expiredDate, DATE_FORMAT(cv_test_for_employee.dateExpired, '%H:%i') as expiredTime FROM  cv_employeee RIGHT JOIN cv_test_for_employee ON cv_employeee.persID=cv_test_for_employee.persID";
@@ -269,7 +263,8 @@ function corona_admin_menu_employees_CoronaTest() {
       echo '<div class="tableContainer">
             <div class="divTable">
             <div class="divRow headerRow">
-            <div class="divCell header">id</div>
+            <div class="divCell header">Test Id</div>
+            <div class="divCell header">Personen Id</div>
             <div class="divCell header">Vorname</div>
             <div class="divCell header">Nachname</div>
             <div class="divCell header">Status</div>
@@ -283,6 +278,7 @@ function corona_admin_menu_employees_CoronaTest() {
             // output data of each row
             foreach($result as $test_ergebnis) {
               echo '<div class="divRow">
+              <div class="divCell">'.$test_ergebnis->id.'</div>
               <div class="divCell">'.$test_ergebnis->persID.'</div>
               <div class="divCell">'.$test_ergebnis->vorname.'</div>
               <div class="divCell">'.$test_ergebnis->name.'</div>
@@ -351,7 +347,7 @@ function corona_admin_menu_employees() {
     if ($wpdb->num_rows > 0) {
       echo '<div class="tableContainer">
       <div class="divRow headerRow">
-      <div class="divCell header">id</div>
+      <div class="divCell header">Personen Id</div>
       <div class="divCell header">Vorname</div>
       <div class="divCell header">Nachname</div>
       <div class="divCell header">Status</div></div>';
