@@ -169,13 +169,13 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
           WHERE cv_employeee.persID = $personId";
   $result = $wpdb->get_results($sql);
 
-  ?>
-  <div class="corona-verify-form">
+  echo '<div class="corona-verify-form">
       <div class="corna-verify-heading">  
-          <h1><?php _e("Corona - Verifizierungsseite",'');?></h1>
-          <div class="corna-verify-container">
-          <?php foreach($result as $test_ergebnis) { 
-          echo '<div class="corna-verify-container-item">';
+          <h1> "Corona - Verifizierungsseite"</h1>
+          <div class="corna-verify-container">';
+          foreach($result as $test_ergebnis) { 
+          echo '
+          <div class="corna-verify-container-item">';
           echo '<b>Getestete Person: ' .$test_ergebnis->vorname. ' ' .$test_ergebnis->name.' </b>';
           echo '<div class="ergebnis">';
           if(call_user_func('isGueltig',$test_ergebnis->expired) == 1){;
@@ -201,15 +201,10 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
             echo '<div class="expired">';
             echo '<b>Das Testergebnis vom ' .$test_ergebnis->dateTimeFull. 'ist leider nicht mehr gültig.</b>';
           }
-          echo '</div></div>'; 
-
-          }?>
-          <div>
-      </div>
-  </div>
-<?php } ?>
-
-<?php
+            echo '</div></div>'; 
+          }
+          echo '<div></div></div>';
+}
 
 function isGueltig($expiredDate){
   $now = getNow();
