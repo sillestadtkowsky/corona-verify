@@ -1,0 +1,21 @@
+{
+	"name" : "Corona Test Verify Checker",
+	"slug" : "corona-verify",
+	"author" : "<a href='https://osowsky-webdesign.de'>Silvio Osowsky</a>",
+	"author_profile" : "https://profiles.wordpress.org/s_i_l_l_e/",
+	"version" : "1.1.6",
+	"download_url" : "https://plugin.wp.osowsky-webdesign.de/corona-verify.zip",
+	"requires" : "3.0",
+	"tested" : "5.8",
+	"requires_php" : "7.2",
+	"last_updated" : "2021-11-25 02:10:00",
+	"sections" : {
+		"description" : "Diese Plugin erlaubt das digitale Vorzeigen von einem  3G Staus für Mitarbeiter einer Firma",
+		"installation" : "Klicke bitte den aktivieren Knopf.",
+		"changelog" : "<h4>1.2.5 –  24 November 2021</h4><ul><li>Bug fixes.</li><li>Initital release.</li></ul>"
+	},
+	"banners" : {
+		"low" : "https://plugin.wp.osowsky-webdesign.debanner-772x250.jpg",
+		"high" : "https://plugin.wp.osowsky-webdesign.debanner-1544x500.jpg"
+	}
+}

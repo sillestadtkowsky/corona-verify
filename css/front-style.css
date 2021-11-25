@@ -4,6 +4,21 @@ Corona-Verify Styles
 
 .corona-verify-form { padding:30px; display:block; border:1px solid #ccc;font-family: arial; font-size:12px}
 
+.paragraf{
+    font-size: .5em;
+    font-weight: normal;
+}
+.name{
+    padding: 10px;;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.greenBackground{
+    font-size: 1.3em;
+    padding: 10px;
+    background-color: green;
+    color: white;
+}
 .tableContainer {
     height: 200px;
     overflow: auto;
@@ -40,7 +55,7 @@ Corona-Verify Styles
 .qr {
     text-align: center;
     margin:10px;
-    padding: 5px;
+    padding: 20px;
 }
 .ergebnis{
     margin: auto;
@@ -51,14 +66,17 @@ Corona-Verify Styles
 .negativ {
     display: grid;
 }
+.aktuellesDatum {
+    font-size: .5em;
+}
 .negativ:before {
-    font-family: "Font Awesome 6 Free"; font-weight: 900; content: "\f00c";
-    font-size: 4.0em;
+    font-family: "Font Awesome 6 Free"; font-weight: 900; content: "\f058";
+    font-size: 6.0em;
     color: green; 
 }
 .positiv:before {
     font-family: "Font Awesome 6 Free"; font-weight: 900; content: "\f057";
-    font-size: 4.0em;
+    font-size: 6.0em;
     color: red;
 }
 .expired {
@@ -66,7 +84,7 @@ Corona-Verify Styles
 }
 .expired:before{
     font-family: "Font Awesome 6 Free"; font-weight: 900; content: "\f256";
-    font-size: 4.0em;
+    font-size: 6.0em;
     color: red;
 }
 .collapse {

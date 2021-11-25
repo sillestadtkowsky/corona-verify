@@ -3,9 +3,9 @@ ob_start();
 /**
 *
 * Plugin Name:       Corona Test Verifyer
-* Plugin URI:        https://osowsky-webdesign.de/cms/plugins
+* Plugin URI:        https://plugin.wp.osowsky-webdesign.de/
 * Description:       Quittiert das Ergebnis eines durchgeführten Test
-* Version:           1.1.2
+* Version:           1.1.5
 * Requires at least: 5.2
 * Requires PHP:      7.2
 * Author:            Silvio Osowsky
@@ -14,7 +14,7 @@ ob_start();
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 * Text Domain:       osowsky-design-plugin
 */
-date_default_timezone_set('Europe/Athens') ; 
+date_default_timezone_set('Europe/Berlin') ; 
 
 if (! function_exists('fa_custom_setup_cdn_webfont') ) {
   function fa_custom_setup_cdn_webfont($cdn_url = '', $integrity = null) {
@@ -142,10 +142,11 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
   }
   
   $ident = $_GET['ident'] ?? 'null';
-  
-  if($ident === 'null'){
-    $personId = call_user_func('is_logged_in');
+  if($ident === 'null' || null == $ident){
+    $personId = get_current_user_id();
+    $showQR = true;
   }else{
+    $showQR = false;
     $lesbar = decrypt($ident, "osowsky");
     $paramPersId = explode("&", $lesbar)[0];
     $personId = explode("=", $paramPersId )[1];
@@ -153,7 +154,7 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
     $testId = explode("=", $paramTestId)[1];
   }
 
-  $sql = "SELECT cv_employeee.persID as persID, cv_employeee.vorname as vorname, cv_employeee.name as name, 
+  $sql = "SELECT max(cv_test_for_employee.id) as laastTestId, cv_employeee.persID as persID, cv_employeee.vorname as vorname, cv_employeee.name as name, 
           cv_employeee.status as status,
           cv_test_for_employee.id as testId, DATE_FORMAT(cv_test_for_employee.dateTime, '%d.%m.%Y') as datum , 
           DATE_FORMAT(cv_test_for_employee.dateTime, '%H:%i') as zeit, cv_test_for_employee.ergebnis as ergebnis, 
@@ -165,36 +166,42 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
   $result = $wpdb->get_results($sql);
 
   echo '<div class="corona-verify-form">
-      <div class="corna-verify-heading">  
-          <h1> "Corona - Verifizierungsseite"</h1>
-          <div class="corna-verify-container">';
+      <div class="corna-verify-heading"><h1>3G Verifizierung</h1>';  
+          
           foreach($result as $test_ergebnis) { 
-          echo '
-          <div class="corna-verify-container-item">';
-          echo '<b>Getestete Person: ' .$test_ergebnis->vorname. ' ' .$test_ergebnis->name.' </b>';
-          echo '<div class="ergebnis">';
-          if(call_user_func('isGueltig',$test_ergebnis->expired) == 1){;
+          if(call_user_func('isGueltig',$test_ergebnis->expired) == 1){
+            echo '<div class="corna-verify-container-item">
+                  <div class="paragraf"><p>Wir sind nach § 28 Infektionsschutzgesetz verpflichtet, 
+                  den 3G-Status jedes unserer Mitarbeiter festzustellen und das Ergebnis zu dokumentieren. 
+                  Einen gültigen 3G-Status hat derjenige, der entweder geimpft, genesen oder getestet ist. 
+                  Wir versichern, dass jede Person, für die hier ein gültiger Status angezeigt wird, eines der drei vorgenannten Bedingungen erfüllt.</p></div>
+                  <div class="corna-verify-container">
+                  <label>Name</label>
+                  <div class="name"><b>' .$test_ergebnis->vorname. ' ' .$test_ergebnis->name.'</b></div>
+            <div class="ergebnis">';
             if($test_ergebnis->ergebnis === 'positiv'){
               echo '<div class="positiv">';
               echo '<b>Unser Mitarbeiter hat <u>KEINEN</u> gültigen ' .$test_ergebnis->status. ' Status</b>';
             }else{
               echo '<div class="negativ">';
-              echo '<b>Unser Mitarbeiter hat einen gültigen ' .$test_ergebnis->status. ' Status</b>';
+              echo '<div class="greenBackground"><div class="aktuellesDatum">' .$DateAndTime = date('d.m.Y H:i', time()). ' Uhr</div> <b>3-G Status gültig</b></div>';
               if($qr == 1){
                 $personId = get_query_var('persId', -1 );
                 $testId = get_query_var( 'testId', -1 );
                 if($personId == -1 || $testId == -1){
-                  $personId = call_user_func('is_logged_in');
+                  $personId = get_current_user_id();
                   $testId = $test_ergebnis->persID;
                 }
-                echo '<div class="qr">';
-                echo '' .call_user_func('generateQR',$test_ergebnis->persID,$testId). '';
-                echo '</div>'; 
+                if($showQR){
+                  echo '<div class="qr">';
+                  echo '' .call_user_func('generateQR',$test_ergebnis->persID,$testId). '';
+                  echo '</div>'; 
+                }
               } 
             }
           }else{
             echo '<div class="expired">';
-            echo '<b>Das Testergebnis vom ' .$test_ergebnis->dateTimeFull. 'ist leider nicht mehr gültig.</b>';
+            echo '<b>Dieser Link ist nicht mehr gültig</b>';
           }
             echo '</div></div>'; 
           }
