@@ -5,7 +5,7 @@ ob_start();
 * Plugin Name:       Corona Test Verifyer
 * Plugin URI:        https://plugin.wp.osowsky-webdesign.de/
 * Description:       Quittiert das Ergebnis eines durchgeführten Test
-* Version:           1.1.6
+* Version:           1.1.7
 * Requires at least: 5.2
 * Requires PHP:      7.2
 * Author:            Silvio Osowsky
@@ -167,13 +167,14 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
 
   echo '<div class="corona-verify-form">
       <div class="corna-verify-heading"><h1>3G Verifizierung</h1>';  
+        if ($wpdb->num_rows > 0) {      
           $test_ergebnis = $result[0];
           if(call_user_func('isGueltig',$test_ergebnis->expired) == 1){
             echo '<div class="corna-verify-container-item">
                   <div class="paragraf"><p>Wir sind nach § 28 Infektionsschutzgesetz verpflichtet, 
                   den 3G-Status jedes unserer Mitarbeiter festzustellen und das Ergebnis zu dokumentieren. 
                   Einen gültigen 3G-Status hat derjenige, der entweder geimpft, genesen oder getestet ist. 
-                  Wir versichern, dass jede Person, für die hier ein gültiger Status angezeigt wird, eines der drei vorgenannten Bedingungen erfüllt.</p></div>
+                  Wir versichern, dass jede Person, für die hier ein gültiger Status angezeigt wird, eine der vorgenannten Bedingungen erfüllt.</p></div>
                   <div class="corna-verify-container">
                   <label>Name</label>
                   <div class="name"><b>' .$test_ergebnis->vorname. ' ' .$test_ergebnis->name.'</b></div>
@@ -202,8 +203,11 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
             echo '<div class="expired">';
             echo '<b>Dieser Link ist nicht mehr gültig</b>';
           }
-            echo '</div></div>'; 
-          echo '<div></div></div>';
+        }else{
+            echo '<div class="expired">';
+            echo '<b>Dieser Link ist nicht mehr gültig</b>';
+        } 
+            echo '</div></div><div></div></div>';
 }
 
 function isGueltig($expiredDate){
