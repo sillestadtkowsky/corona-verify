@@ -24,7 +24,7 @@
 			$now = new DateTime();
 			return $now->setTimezone(new DateTimeZone("Europe/Berlin"));
 		}
-		
+
 		public static function fa_custom_setup_cdn_webfont($cdn_url = '', $integrity = null) {
 			$matches = [];
 			$match_result = preg_match('|/([^/]+?)\.css$|', $cdn_url, $matches);

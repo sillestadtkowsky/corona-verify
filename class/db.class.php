@@ -40,6 +40,36 @@ class CV_DB
 		return $result;
 	}
 
+	public static function insertEmployee($id, $firstname, $lastname,$status)
+	{	
+		global $wpdb;
+		$query = '';
+
+		$query .= 
+		'INSERT INTO ' . $wpdb->prefix . 'corona_employee (persID, vorname, name, status) VALUES (' .$id. ', "' .$firstname. '", "'.$lastname. '","' .$status. '")';
+			
+		$result = $wpdb->get_results($query);
+		
+		if ($result > 0) {
+			return '<div class="success">Der Mitarbeiter '.$firstname.' ' .$lastname. ' wurde erfolgreich gespeichert.</div>';
+		}
+	}
+
+	public static function insertTestForEmployee($id, $timestamp, $ergebnis, $symptom, $expired)
+	{	
+		global $wpdb;
+		$query = '';
+
+		$query .= 
+		'INSERT INTO ' . $wpdb->prefix . 'corona_test_to_employee (persId, dateTime, ergebnis, symptom, dateExpired) VALUES (' .$id. ', "' .$timestamp. '", "'.$ergebnis. '","' .$symptom. '","' .$expired. '")';
+			
+		$result = $wpdb->get_results($query);
+		
+		if ($result > 0) {
+			return '<div>Der Test für den Mitarbeiter wurde erfolgreich angelegt.</div>';
+		}
+	}
+
 	public static function getLastTestForEmployee($personId)
 	{	
 		global $wpdb;

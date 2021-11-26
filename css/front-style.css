@@ -20,13 +20,15 @@ Corona-Verify Styles
     color: white;
 }
 .tableContainer {
-    height: 200px;
-    overflow: auto;
-    margin: 10px;;
+    height: 50vh;
+    overflow-y: scroll;
+    margin: 10px;
+    width: 50vw;
 }
 .divTable {
     display: table;
     position: relative;
+    width: 50vw;
 }
 .divRow {
     display: table-row;
@@ -87,6 +89,14 @@ Corona-Verify Styles
     font-size: 6.0em;
     color: red;
 }
+
+.success{
+    font-size: 1.3em;
+    padding: 10px;
+    background-color: green;
+    color: white;
+}
+
 .collapse {
     border-collapse: collapse;
 }
