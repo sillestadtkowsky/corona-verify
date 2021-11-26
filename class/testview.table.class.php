@@ -5,38 +5,49 @@ if (!class_exists('WP_List_Table')) {
   require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
 }
 
-class My_List_Table extends WP_List_Table
+class TestViewTable extends WP_List_Table
 {
 
   function get_columns()
   {
     $columns = array(
       'cb' => '<input type="checkbox" />',
-      'name'      => 'Nachname',
-      'vorname'    => 'Vorname',
-      'persID' => 'Personen ID'
+      'persID' => 'Person Nummer',
+      'vorname' => 'Vorname',
+      'name' => 'Nachname',
+      'id' => 'Test Nummer',
+      'datum' => 'Test Datum',
+      'zeit' => 'Test Uhrzeit',
+      'ergebnis' => 'Test Ergebnis',
+      'symptom' => 'Sympthome',
+      'expiredDate' => 'Gültigkeit Datum',
+      'expiredTime' => 'Gültigkeit Uhrzeit'
     );
     return $columns;
   }
 
   function prepare_items()
   {
-    $data = CV_DB::getEmployeesArray();
+    $data = CV_DB::getTestsForEmployeesArray();
 
-    $per_page = 20;
+    $per_page = 10;
     $current_page = $this->get_pagenum();
+    $total_items = count($data);
+    $this->set_pagination_args( array('total_items' => $total_items,'per_page' => $per_page ));
+    
     if (1 < $current_page) {
       $offset = $per_page * ($current_page - 1);
     } else {
       $offset = 0;
     }
-    $this->process_bulk_action();
+
     $columns = $this->get_columns();
     $hidden = array();
     $sortable = $this->get_sortable_columns();
     $this->_column_headers = array($columns, $hidden, $sortable);
     usort($data, array(&$this, 'usort_reorder'));
-    $this->items = $data;
+    $this->items = array_slice($data,(($current_page-1)*$per_page),$per_page);
+    $this->process_bulk_action();
   }
 
   function column_default($item, $column_name)
@@ -45,6 +56,13 @@ class My_List_Table extends WP_List_Table
       case 'persID':
       case 'vorname':
       case 'name':
+      case 'id':
+      case 'datum':
+      case 'zeit':
+      case 'ergebnis':
+      case 'symptom':
+      case 'expiredDate':
+      case 'expiredTime':
         return $item[$column_name];
       default:
         return print_r($item, false); //Show the whole array for troubleshooting purposes
@@ -60,16 +78,23 @@ class My_List_Table extends WP_List_Table
   function get_sortable_columns()
   {
     $sortable_columns = array(
-      'persID'  => array('persID', true),
+      'persID' => array('persID', true),
       'vorname' => array('vorname', true),
-      'name'   => array('name', true)
+      'name'   => array('name', true),
+      'id' => array('id', true),
+      'datum' => array('datum', true),
+      'zeit' => array('zeit', true),
+      'ergebnis' => array('ergebnis', true),
+      'symptom' => array('symptom', true),
+      'expiredDate' => array('expiredDate', true),
+      'expiredTime' => array('expiredTime', true)
     );
     return $sortable_columns;
   }
 
   function usort_reorder($a, $b)
   {
-    $orderby = (!empty($_GET['orderby'])) ? $_GET['orderby'] : 'name';
+    $orderby = (!empty($_GET['orderby'])) ? $_GET['orderby'] : 'id';
     $order = (!empty($_GET['order'])) ? $_GET['order'] : 'asc';
     $result = strcmp($a[$orderby], $b[$orderby]);
     return ($order === 'desc') ? $result : -$result;
@@ -79,7 +104,7 @@ class My_List_Table extends WP_List_Table
   {
 
     $actions = array(
-      'delete'    => sprintf('<a href="?page=%s&action=%s&persID[]=%s">Löschen</a>', '' . $_REQUEST["page"] . '', 'delete', $item['persID']),
+      'delete'    => sprintf('<a href="?page=%s&action=%s&id[]=%s">Löschen</a>', '' . $_REQUEST["page"] . '', 'delete', $item['id']),
     );
 
     return sprintf(
@@ -87,7 +112,7 @@ class My_List_Table extends WP_List_Table
       /*$1%s*/
       $item['name'],
       /*$2%s*/
-      $item['persID'],
+      $item['id'],
       /*$3%s*/
       $this->row_actions($actions)
     );
@@ -97,8 +122,8 @@ class My_List_Table extends WP_List_Table
   {
     return sprintf(
       '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-      $item['persID'],  //Let's simply repurpose the table's singular label ("plugin")
-      $item['persID']                //The value of the checkbox should be the record's id
+      $item['id'], 
+      $item['id']
     );
   }
   function get_bulk_actions()
@@ -115,7 +140,7 @@ class My_List_Table extends WP_List_Table
     // If the delete bulk action is triggered
     $action = $this->current_action();
     if ('delete' === $action) {
-      $delete_ids = esc_sql($_POST['persID']);
+      $delete_ids = esc_sql($_GET['id']);
       // loop over the array of record IDs and delete them
       foreach ($delete_ids as $did) {
         global $wpdb;
