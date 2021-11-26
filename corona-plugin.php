@@ -14,61 +14,45 @@ ob_start();
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 * Text Domain:       osowsky-design-plugin
 */
+
+/*
+* Load required classes
+*/
+require_once('class/db.class.php');
+require_once('class/utils.class.php');
+require_once('class/secure.class.php');
+require_once('class/qr.class.php');
+
+/*
+* set defaults
+*/
 date_default_timezone_set('Europe/Berlin') ; 
 
+/*
+* load webfonts
+*/
 if (! function_exists('fa_custom_setup_cdn_webfont') ) {
-  function fa_custom_setup_cdn_webfont($cdn_url = '', $integrity = null) {
-    $matches = [];
-    $match_result = preg_match('|/([^/]+?)\.css$|', $cdn_url, $matches);
-    $resource_handle_uniqueness = ($match_result === 1) ? $matches[1] : md5($cdn_url);
-    $resource_handle = "font-awesome-cdn-webfont-$resource_handle_uniqueness";
-
-    foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
-      add_action(
-        $action,
-        function () use ( $cdn_url, $resource_handle ) {
-          wp_enqueue_style( $resource_handle, $cdn_url, [], null );
-        }
-      );
-    }
-
-    if($integrity) {
-      add_filter(
-        'style_loader_tag',
-        function( $html, $handle ) use ( $resource_handle, $integrity ) {
-          if ( in_array( $handle, [ $resource_handle ], true ) ) {
-            return preg_replace(
-              '/\/>$/',
-              'integrity="' . $integrity .
-              '" crossorigin="anonymous" />',
-              $html,
-              1
-            );
-          } else {
-            return $html;
-          }
-        },
-        10,
-        2
-      );
-    }
-  }
+  CV_UTILS::fa_custom_setup_cdn_webfont($cdn_url = '', $integrity = null);
 }
 
-//Adding Admin Menu and Register Styles and Scripts
+/*
+* Register Styles and Scripts
+*/
 function wpdocs_register_plugin_styles() {
   wp_register_style( 'corona-verify', plugins_url( 'corona-verify/css/front-style.css' ) );
   wp_register_style( 'corona-verify-fa', plugins_url( 'corona-verify/css/fa/css/all.css' ) );
   wp_enqueue_style( 'corona-verify' );
   wp_enqueue_style( 'corona-verify-fa' );
 }
-
 add_action( 'wp_enqueue_scripts', 'wpdocs_register_plugin_styles' );
 
+/*
+* Register Styles and Scripts
+*/
 function corona_menu_creator() {
   add_menu_page('Corona Verify Seite', 'Corona-Admin', 'manage_options', 'corona-admin-menu', 'corona_admin_menu', 'dashicons-editor-customchar' , 4 ); 
-  add_submenu_page('corona-admin-menu', 'Mitarbeiter-Liste', 'Mitarbeiter', 'manage_options', 'corona_admin_menu_employees', 'corona_admin_menu_employees'); 
-  add_submenu_page('corona-admin-menu', 'Mitarbeiter-Testübersicht', 'Testübersicht', 'manage_options', 'corona_admin_menu_employees_CoronaTest', 'corona_admin_menu_employees_CoronaTest'); 
+  add_submenu_page('corona-admin-menu', 'Mitarbeiter-Liste', 'Mitarbeiter', 'manage_options', 'corona_admin_menu_CoronaEmployees', 'corona_admin_menu_CoronaEmployees'); 
+  add_submenu_page('corona-admin-menu', 'Mitarbeiter-Testübersicht', 'Testübersicht', 'manage_options', 'corona_admin_menu_CoronaTestOverview', 'corona_admin_menu_CoronaTestOverview'); 
 
   wp_register_style( 'corona-style', plugins_url('css/front-style.css', __FILE__) );
   wp_register_style( 'corona-style-fa', plugins_url('css/fa/css/all.css', __FILE__) );
@@ -84,53 +68,11 @@ function corona_admin_menu() {
 }
 add_action('admin_menu','corona_menu_creator');
 
-function is_logged_in(){
-  if(function_exists( 'is_user_logged_in' )) {
-      return is_user_logged_in();
-  }
-}
-
-function encrypt($string, $key) {
-  $result = '';
-
-  for($i = 0; $i < strlen($string); $i++) {
-      $char = substr($string, $i, 1);
-      $keychar = substr($key, ($i % strlen($key)) - 1, 1);
-      $char = chr(ord($char) + ord($keychar));
-      $result .= $char;
-  }
-  return rtrim(strtr(base64_encode($result), '+/', '-_'), '=');
-}
-
-function decrypt($string, $key) {
-  $result = '';
-  $string =  base64_decode(str_pad(strtr($string, '-_', '+/'), strlen($string) % 4, '=', 1));
-
-  for($i = 0; $i < strlen($string); $i++) {
-      $char = substr($string, $i, 1);
-      $keychar = substr($key, ($i % strlen($key)) - 1, 1);
-      $char = chr(ord($char) - ord($keychar));
-      $result .= $char;
-  }
-
-  return $result;
-}
-
-function generateQR($persId, $testId){
-  $cht = "qr";
-  $chs = "300x300";
-  $params = 'persId=' . $persId . '&testId=' .$testId;
-  $verschluessseln= encrypt($params, "osowsky");
-  $permaLink = get_permalink() . '?ident=' . $verschluessseln;
-  $chl = urlencode($permaLink);
-  $choe = "UTF-8";
-  $qrcode = 'https://chart.googleapis.com/chart?cht=' . $cht . '&chs=' . $chs . '&chl=' . $permaLink . '&choe=' . $choe;
-
-  return '<img src="' .$qrcode. '" alt="Verifizierungslink QR ">';
-}
-
-// function to login Shortcode 
-function corona_login_shortcode( $atts, $content = null, $tag = '') {
+/* 
+* ShortCode [corona-verify-form]
+* @param qr (1 || 0) >> display QR Code or not 
+*/
+function corona_verify_shortcode( $atts, $content = null, $tag = '') {
   global $wpdb;
 
   $a = shortcode_atts( array(
@@ -147,29 +89,21 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
     $showQR = true;
   }else{
     $showQR = false;
-    $lesbar = decrypt($ident, "osowsky");
+    $lesbar = CV_SECURE::decrypt($ident, "Wissen=M8");
     $paramPersId = explode("&", $lesbar)[0];
     $personId = explode("=", $paramPersId )[1];
     $paramTestId = explode("&", $lesbar)[1];
     $testId = explode("=", $paramTestId)[1];
   }
 
-  $sql = "SELECT cv_test_for_employee.id as lastTestId, cv_employeee.persID as persID, cv_employeee.vorname as vorname, cv_employeee.name as name, 
-          cv_employeee.status as status,
-          cv_test_for_employee.id as testId, DATE_FORMAT(cv_test_for_employee.dateTime, '%d.%m.%Y') as datum , 
-          DATE_FORMAT(cv_test_for_employee.dateTime, '%H:%i') as zeit, cv_test_for_employee.ergebnis as ergebnis, 
-          cv_test_for_employee.symptom as symptom, cv_test_for_employee.dateExpired as expired, 
-          CONCAT(' <i>', DATE_FORMAT(cv_test_for_employee.dateTime, '%d.%m.%Y'), ' - ', DATE_FORMAT(cv_test_for_employee.dateTime, '%H:%i'),' Uhr </i>') as dateTimeFull, 
-          CONCAT(DATE_FORMAT(cv_test_for_employee.dateExpired, '%d.%m.%Y'), ' - ', DATE_FORMAT(cv_test_for_employee.dateExpired, '%H:%i')) as gueltig 
-          FROM  cv_employeee RIGHT JOIN cv_test_for_employee ON cv_employeee.persID=cv_test_for_employee.persID
-          WHERE cv_employeee.persID = $personId ORDER BY lastTestId DESC";
-  $result = $wpdb->get_results($sql);
+  // call DB Data
+  $result = CV_DB::getLastTestForEmployee($personId);
 
   echo '<div class="corona-verify-form">
       <div class="corna-verify-heading"><h1>3G Verifizierung</h1>';  
         if ($wpdb->num_rows > 0) {      
           $test_ergebnis = $result[0];
-          if(call_user_func('isGueltig',$test_ergebnis->expired) == 1){
+          if(CV_UTILS::isGueltig($test_ergebnis->expired) == 1){
             echo '<div class="corna-verify-container-item">
                   <div class="paragraf"><p>Wir sind nach § 28 Infektionsschutzgesetz verpflichtet, 
                   den 3G-Status jedes unserer Mitarbeiter festzustellen und das Ergebnis zu dokumentieren. 
@@ -194,7 +128,7 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
                 }
                 if($showQR){
                   echo '<div class="qr">';
-                  echo '' .call_user_func('generateQR',$test_ergebnis->persID,$testId). '';
+                  echo '' .CV_QR::getCode($test_ergebnis->persID,$testId);
                   echo '</div>'; 
                 }
               } 
@@ -209,29 +143,12 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
         } 
             echo '</div></div><div></div></div>';
 }
+add_shortcode( 'corona-verify-form', 'corona_verify_shortcode' );
 
-function isGueltig($expiredDate){
-  $now = getNow();
-  $date2 = new DateTime($expiredDate, new DateTimeZone("CET"));
-
-  if ($date2 < $now) {
-    return 0;
-  }
-  else {
-    return 1;  
-  }
-}
-
-function getNow(){
-  $now = new DateTime();
-  return $now->setTimezone(new DateTimeZone("Europe/Berlin"));
-}
-
-
-add_shortcode( 'corona-verify-form', 'corona_login_shortcode' );
-
-//Adding Admin Menu and Register Styles and Scripts
-function corona_admin_menu_employees_CoronaTest() {
+/* 
+* Adding Admin Menu and Register Styles and Scripts
+*/
+function corona_admin_menu_CoronaTestOverview() {
   echo '<div class="wrap"><h2>Übersicht durchgeführter Tests pro Mitarbeiter</h2></div>';    
   global $wpdb;
   echo '<div class="wrap"><h3>Einen Corona Test erfassen</h3></div>';
@@ -258,14 +175,9 @@ function corona_admin_menu_employees_CoronaTest() {
   </select></div>';
   echo '<div class="divCell"><button type="submit" name="submit">speichern</button></div>';
   echo '</form></div></div></div>';  
-      
-  $sql = "SELECT cv_employeee.persID, cv_employeee.vorname as vorname, cv_employeee.name as name, 
-          cv_employeee.status as status,
-          cv_test_for_employee.id as id, cv_test_for_employee.persId as persID, DATE_FORMAT(cv_test_for_employee.dateTime, '%d.%m.%Y') as datum , 
-          DATE_FORMAT(cv_test_for_employee.dateTime, '%H:%i')  as zeit, cv_test_for_employee.ergebnis as ergebnis, 
-          cv_test_for_employee.symptom as symptom , 
-          DATE_FORMAT(cv_test_for_employee.dateExpired, '%d.%m.%Y') as expiredDate, DATE_FORMAT(cv_test_for_employee.dateExpired, '%H:%i') as expiredTime FROM  cv_employeee RIGHT JOIN cv_test_for_employee ON cv_employeee.persID=cv_test_for_employee.persID";
-  $result = $wpdb->get_results($sql);
+  
+  // call DB Data   
+  $result = CV_DB::getTestsForEmployees();
   
   echo '</br><div class="wrap"><h3>'.$wpdb->num_rows.' durchgeführte Tests</h3></div>';        
     if ($wpdb->num_rows > 0) {
@@ -326,7 +238,7 @@ function corona_admin_menu_employees_CoronaTest() {
     }
 }
 
-function corona_admin_menu_employees() {
+function corona_admin_menu_CoronaEmployees() {
   global $wpdb;
     echo '<div class="wrap"><h2>Übersicht der registrierten Mitarbeiter</h2></div>';
     echo '<div class="wrap"><h3>Einen Mitarbeiter erfassen</h3></div>';
@@ -347,9 +259,9 @@ function corona_admin_menu_employees() {
     </select></div>';
     echo '<div class="divCell"><button type="submit" name="submit">speichern</button></div>';
     echo '</form></div></div></div>';  
-
-    $sql = "SELECT persID, vorname, name, status FROM cv_employeee";
-    $result = $wpdb->get_results($sql);
+    
+    // call DB Data
+    $result = CV_DB::getEmployees();
 
     echo '</br><div class="wrap"><h3>'.$wpdb->num_rows.' vorhandene Mitarbeiter</h3></div>';   
 
@@ -395,5 +307,4 @@ function corona_admin_menu_employees() {
       echo "Bitte alle Felder ausfüllen";
     }
   }
-
 }
