@@ -1,10 +1,6 @@
 <?php
 
-
-if (!class_exists('WP_List_Table')) {
-  require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
-}
-
+require_once __DIR__ . '/../class/table.class.php';
 
 /* 
 * ####################
@@ -35,10 +31,9 @@ function corona_admin_menu_CoronaEmployees() {
       echo '<div class="tableContainer">
       <div class="divTable">
       <div class="divRow headerRow">
-      <div class="divCell header">Personen Id</div>
+      <div class="divCell header">Nachname</div>
       <div class="divCell header">Vorname</div>
-      <div class="divCell header">Nachname</div></div>';
-              
+      <div class="divCell header">Personen Id</div></div>';        
       // output data of each row
       foreach($result as $mitarbeiter) {
         echo '<div class="divRow">
@@ -74,6 +69,7 @@ function corona_admin_menu_CoronaEmployees() {
 * Admin Menu - Test Overview
 */
 function corona_admin_menu_CoronaTestOverview() {
+
   echo '<div class="wrap"><h2>Übersicht durchgeführter Tests pro Mitarbeiter</h2></div>';    
   global $wpdb;
   echo '<div class="wrap"><h3>Einen Corona Test erfassen</h3></div>';
@@ -160,3 +156,25 @@ function corona_admin_menu_CoronaTestOverview() {
 
     }
 }
+
+/* 
+* ####################
+* Admin Menu - Test Overview
+*/
+function corona_admin_menu_WpTableExample() {
+  if( ! class_exists( 'WP_List_Table' ) ) {
+    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+  }
+
+  $myListTable = new My_List_Table();
+  echo '<div class="wrap"><h2>Übersicht der registrierten Mitarbeiter</h2>'; 
+  
+  $myListTable->prepare_items(); 
+  $requestPage = $_REQUEST["page"];
+  echo '<form id="events-filter" method="post"><input type="hidden" name="page" value="' .$requestPage. '" />';
+  $myListTable->display(); 
+  echo '</form>';
+  echo '</div>'; 
+}
+
+

@@ -2,46 +2,61 @@
 Corona-Verify Styles
 ********************************/
 
-.corona-verify-form { padding:30px; display:block; border:1px solid #ccc;font-family: arial; font-size:12px}
+.corona-verify-form {
+    padding: 30px;
+    display: block;
+    border: 1px solid #ccc;
+    font-family: arial;
+    font-size: 12px
+}
 
-.paragraf{
+.paragraf {
     font-size: .5em;
     font-weight: normal;
 }
-.name{
-    padding: 10px;;
+
+.name {
+    padding: 10px;
+    ;
     font-size: 1.5em;
     font-weight: bold;
 }
-.greenBackground{
+
+.greenBackground {
     font-size: 1.3em;
     padding: 10px;
     background-color: green;
     color: white;
 }
+
 .tableContainer {
     height: 50vh;
     overflow-y: scroll;
     margin: 10px;
     width: 50vw;
 }
+
 .divTable {
     display: table;
     position: relative;
     width: 50vw;
 }
+
 .divRow {
     display: table-row;
 }
+
 .divCell {
     display: table-cell;
     padding: 10px;
     background-color: white;
 }
+
 .header {
     font-weight: bold;
     background-color: lightgray !important;
 }
+
 .headerRow {
     background-color: lightgray !important;
 }
@@ -50,47 +65,63 @@ Corona-Verify Styles
 .corna-verify-heading {
     display: block;
     font-family: arial;
-    font-weight: 700; font-size:24px;
+    font-weight: 700;
+    font-size: 24px;
     margin: 0 0 20px;
     text-align: center;
 }
+
 .qr {
     text-align: center;
-    margin:10px;
+    margin: 10px;
     padding: 20px;
 }
-.ergebnis{
+
+.ergebnis {
     margin: auto;
 }
+
 .positiv {
     display: grid;
 }
+
 .negativ {
     display: grid;
 }
+
 .aktuellesDatum {
     font-size: .5em;
 }
+
 .negativ:before {
-    font-family: "Font Awesome 6 Free"; font-weight: 900; content: "\f058";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    content: "\f058";
     font-size: 6.0em;
-    color: green; 
+    color: green;
 }
+
 .positiv:before {
-    font-family: "Font Awesome 6 Free"; font-weight: 900; content: "\f057";
-    font-size: 6.0em;
-    color: red;
-}
-.expired {
-    display: grid;
-}
-.expired:before{
-    font-family: "Font Awesome 6 Free"; font-weight: 900; content: "\f256";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    content: "\f057";
     font-size: 6.0em;
     color: red;
 }
 
-.success{
+.expired {
+    display: grid;
+}
+
+.expired:before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    content: "\f256";
+    font-size: 6.0em;
+    color: red;
+}
+
+.success {
     font-size: 1.3em;
     padding: 10px;
     background-color: green;
@@ -101,7 +132,7 @@ Corona-Verify Styles
     border-collapse: collapse;
 }
 
-.corona-mitarbeiter-container{
+.corona-mitarbeiter-container {
     min-width: 50%;
 }
 
@@ -111,27 +142,43 @@ Corona-Verify Styles
     margin: 20px;
 }
 
-.corona-txt:after{clear:both; display:block; overflow:hidden; content:""}
-.corona-txt > label {
+.corona-txt:after {
+    clear: both;
+    display: block;
+    overflow: hidden;
+    content: ""
+}
+
+.corona-txt>label {
     float: left;
     width: 180px;
 }
-.corona-txt > input { border:1px solid #ccc; padding:8px 5px; width:300px; }
+
+.corona-txt>input {
+    border: 1px solid #ccc;
+    padding: 8px 5px;
+    width: 300px;
+}
 
 
 .corona-verify-form .button {
     background: #ccc none repeat scroll 0 0;
     border: 1px solid #ccc;
-    border-radius: 0; text-transform:uppercase; font-size:15px;font-family: arial;
+    border-radius: 0;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-family: arial;
     padding: 10px 20px;
 }
+
 .corona-verify-form .button:hover {
     background: #000 none repeat scroll 0 0;
     border: 1px solid #000;
     border-radius: 0;
     padding: 10px 20px;
 }
-.corona-registration-form .error{
-    color:red;
+
+.corona-registration-form .error {
+    color: red;
     margin-bottom: 18px;
 }
