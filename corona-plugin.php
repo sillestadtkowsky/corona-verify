@@ -36,6 +36,41 @@ if (! function_exists('fa_custom_setup_cdn_webfont') ) {
   CV_UTILS::fa_custom_setup_cdn_webfont($cdn_url = '', $integrity = null);
 }
 
+/*
+* ###########################
+* Register Styles and Scripts
+*/
+function wpdocs_register_plugin_styles() {
+  wp_register_style( 'corona-style', plugins_url('/css/front-style.css', __FILE__));
+  wp_register_style( 'corona-style-fa', plugins_url('/css/fa/css/all.css', __FILE__));
+  wp_enqueue_style( 'corona-style-fa' );
+  wp_enqueue_style( 'corona-style' );
+}
+add_action( 'wp_enqueue_scripts', 'wpdocs_register_plugin_styles' );
+
+/*
+* ###############################
+* ADD Admin Menu and Admin Styles
+*/
+function corona_menu_creator() {
+  add_menu_page('Corona Verify Seite', 'Corona-Admin', 'manage_options', 'corona-admin-menu', 'corona_admin_menu', 'dashicons-editor-customchar' , 4 ); 
+  add_submenu_page('corona-admin-menu', 'Mitarbeiter-Liste', 'Mitarbeiter', 'manage_options', 'corona_admin_menu_CoronaEmployees', 'corona_admin_menu_CoronaEmployees'); 
+  add_submenu_page('corona-admin-menu', 'Mitarbeiter-Testübersicht', 'Testübersicht', 'manage_options', 'corona_admin_menu_CoronaTestOverview', 'corona_admin_menu_CoronaTestOverview'); 
+
+  wp_register_style( 'corona-style', plugins_url('/css/front-style.css', __FILE__));
+  wp_register_style( 'corona-style-fa', plugins_url('/css/fa/css/all.css', __FILE__));
+  wp_register_script('corona-script', plugins_url('/js/corona.js', __FILE__ ));
+  wp_enqueue_style( 'corona-style-fa' );
+  wp_enqueue_style( 'corona-style' );
+  wp_enqueue_script( 'corona-script' );
+}
+
+function corona_admin_menu() {
+  echo '<div class="wrap"><h1>Willkommen im Corona Verify Admin Dashboard</h2></div>';
+  echo '<div class="wrap">Hier haben Sie die Möglichkeit, die Mitarbeiter Ihrer Firma zu hinterlegen und durchgführte Corona Test zu dokumentieren.</div>';
+}
+add_action('admin_menu','corona_menu_creator');
+
 /* 
 * ShortCode [corona-verify-form]
 * @param qr (1 || 0) >> display QR Code or not 
@@ -83,7 +118,7 @@ function corona_verify_shortcode( $atts, $content = null, $tag = '') {
                   <div class="ergebnis">';
             if($test_ergebnis->ergebnis === 'positiv'){
               echo '<div class="positiv">';
-              echo '<b>Unser Mitarbeiter hat <u>KEINEN</u> gültigen ' .$test_ergebnis->status. ' Status</b>';
+              echo '<b>Unser Mitarbeiter hat <u>KEINEN</u> gültigen 3-G Status</b>';
             }else{
               echo '<div class="negativ">';
               echo '<div class="greenBackground"><div class="aktuellesDatum">' .$DateAndTime = date('d.m.Y H:i', time()). ' Uhr</div> <b>3-G Status gültig</b></div>';

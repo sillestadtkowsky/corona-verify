@@ -7,8 +7,7 @@ class CV_DB
 		$query = '';
 
 		$query .= 
-		'SELECT employee.persID, employee.vorname as vorname, employee.name as name, 
-		employee.status as status,
+		'SELECT employee.persID, employee.vorname as vorname, employee.name as name,
 		tests.id as id, tests.persId as persID, DATE_FORMAT(tests.dateTime, "%d.%m.%Y") as datum , 
 		DATE_FORMAT(tests.dateTime, "%H:%i")  as zeit, tests.ergebnis as ergebnis, 
 		tests.symptom as symptom , 
@@ -30,7 +29,7 @@ class CV_DB
 		$query = '';
 
 		$query .= 
-		'SELECT employee.persID, employee.vorname, employee.name, employee.status 
+		'SELECT employee.persID, employee.vorname, employee.name
 		FROM 
 			' . $wpdb->prefix . 'corona_employee as employee
 		ORDER BY
@@ -40,13 +39,13 @@ class CV_DB
 		return $result;
 	}
 
-	public static function insertEmployee($id, $firstname, $lastname,$status)
+	public static function insertEmployee($id, $firstname, $lastname)
 	{	
 		global $wpdb;
 		$query = '';
 
 		$query .= 
-		'INSERT INTO ' . $wpdb->prefix . 'corona_employee (persID, vorname, name, status) VALUES (' .$id. ', "' .$firstname. '", "'.$lastname. '","' .$status. '")';
+		'INSERT INTO ' . $wpdb->prefix . 'corona_employee (persID, vorname, name) VALUES (' .$id. ', "' .$firstname. '", "'.$lastname. '")';
 			
 		$result = $wpdb->get_results($query);
 		
@@ -76,8 +75,7 @@ class CV_DB
 		$query = '';
 
 		$query .= 
-		'SELECT test.id as lastTestId, employee.persID as persID, employee.vorname as vorname, employee.name as name, 
-          employee.status as status,
+		'SELECT test.id as lastTestId, employee.persID as persID, employee.vorname as vorname, employee.name as name,
           test.id as testId, DATE_FORMAT(test.dateTime, "%d.%m.%Y") as datum , 
           DATE_FORMAT(test.dateTime, "%H:%i") as zeit, test.ergebnis as ergebnis, 
           test.symptom as symptom, test.dateExpired as expired, 

@@ -5,40 +5,6 @@ if (!class_exists('WP_List_Table')) {
   require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
 }
 
-/*
-* ###########################
-* Register Styles and Scripts
-*/
-function wpdocs_register_plugin_styles() {
-  wp_register_style( 'corona-verify', plugins_url( '../css/front-style.css' ) );
-  wp_register_style( 'corona-verify-fa', plugins_url( '../css/fa/css/all.css' ) );
-  wp_enqueue_style( 'corona-verify' );
-  wp_enqueue_style( 'corona-verify-fa' );
-}
-add_action( 'wp_enqueue_scripts', 'wpdocs_register_plugin_styles' );
-
-/*
-* ###########################
-* Register Styles and Scripts
-*/
-function corona_menu_creator() {
-  add_menu_page('Corona Verify Seite', 'Corona-Admin', 'manage_options', 'corona-admin-menu', 'corona_admin_menu', 'dashicons-editor-customchar' , 4 ); 
-  add_submenu_page('corona-admin-menu', 'Mitarbeiter-Liste', 'Mitarbeiter', 'manage_options', 'corona_admin_menu_CoronaEmployees', 'corona_admin_menu_CoronaEmployees'); 
-  add_submenu_page('corona-admin-menu', 'Mitarbeiter-Testübersicht', 'Testübersicht', 'manage_options', 'corona_admin_menu_CoronaTestOverview', 'corona_admin_menu_CoronaTestOverview'); 
-
-  wp_register_style( 'corona-style', plugins_url('../css/front-style.css', __FILE__) );
-  wp_register_style( 'corona-style-fa', plugins_url('../css/fa/css/all.css', __FILE__) );
-  wp_register_script('corona-script', plugins_url('../js/corona.js', __FILE__) );
-  wp_enqueue_style( 'corona-style-fa' );
-  wp_enqueue_style( 'corona-style' );
-  wp_enqueue_script( 'corona-script' );
-}
-
-function corona_admin_menu() {
-  echo '<div class="wrap"><h1>Willkommen im Corona Verify Admin Dashboard</h2></div>';
-  echo '<div class="wrap">Hier haben Sie die Möglichkeit, die Mitarbeiter Ihrer Firma zu hinterlegen und durchgführte Corona Test zu dokumentieren.</div>';
-}
-add_action('admin_menu','corona_menu_creator');
 
 /* 
 * ####################
@@ -49,7 +15,7 @@ function corona_admin_menu_CoronaEmployees() {
     echo '<div class="wrap"><h2>Übersicht der registrierten Mitarbeiter</h2></div>';
     echo '<div class="wrap"><h3>Einen Mitarbeiter erfassen</h3></div>';
     echo '<form method="POST">';
-    echo '<div class=""><div class="divTable"><div class="divRow">';
+    echo '<div class=""><div class="divRow">';
     $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
     echo '<div class="divCell"><b>Mitarbeiter </b><select placeholder="Mitarbeiter" name="id" id="id">';
     echo '<option value=""></option>';
@@ -57,14 +23,8 @@ function corona_admin_menu_CoronaEmployees() {
       echo '<option value="' . esc_html( $user->ID ) . '">' . esc_html( $user->first_name ) . ' '. esc_html( $user->last_name ) . '</option>';
     }
     echo '</select></div>';
-    echo '<div class="divCell"><b>Status </b><select placeholder="status" name="status" id="status">
-    <option value=""></option>
-    <option value="3G">3G</option>
-    <option value="2G">2G</option>
-    <option value="2G+">2G+</option>
-    </select></div>';
     echo '<div class="divCell"><button type="submit" name="submit">speichern</button></div>';
-    echo '</form></div></div></div>';  
+    echo '</form></div></div>';  
     
     // call DB Data
     $result = CV_DB::getEmployees();
@@ -77,16 +37,14 @@ function corona_admin_menu_CoronaEmployees() {
       <div class="divRow headerRow">
       <div class="divCell header">Personen Id</div>
       <div class="divCell header">Vorname</div>
-      <div class="divCell header">Nachname</div>
-      <div class="divCell header">Status</div></div>';
+      <div class="divCell header">Nachname</div></div>';
               
       // output data of each row
       foreach($result as $mitarbeiter) {
         echo '<div class="divRow">
         <div class="divCell">'.$mitarbeiter->persID.'</div>
         <div class="divCell">'.$mitarbeiter->vorname.'</div>
-        <div class="divCell">'.$mitarbeiter->name.'</div>
-        <div class="divCell">'.$mitarbeiter->status.'</div></div>';
+        <div class="divCell">'.$mitarbeiter->name.'</div></div>';
       }
       echo '</div></div>';
 
@@ -96,7 +54,6 @@ function corona_admin_menu_CoronaEmployees() {
                
     if(isset($_POST['submit'])){
       $id=$_POST['id'];
-      $status=$_POST['status'];
       $user = get_user_by('ID',$id);
 
       if($user){
@@ -105,7 +62,7 @@ function corona_admin_menu_CoronaEmployees() {
       }
 
       if(null!=$id && null!=$id && null!=$lastname){
-        echo ''. CV_DB::insertEmployee($id, $firstname, $lastname,$status);
+        echo ''. CV_DB::insertEmployee($id, $firstname, $lastname);
       }else{
         echo "Bitte alle Felder ausfüllen";
       }
@@ -121,7 +78,7 @@ function corona_admin_menu_CoronaTestOverview() {
   global $wpdb;
   echo '<div class="wrap"><h3>Einen Corona Test erfassen</h3></div>';
   echo '<form method="POST">';
-  echo '<div class=""><div class="divTable"><div class="divRow">';
+  echo '<div class=""><div class="divRow">';
   
   $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
   
@@ -145,7 +102,7 @@ function corona_admin_menu_CoronaTestOverview() {
   <option value="1">Ja</option>
   </select></div>';
   echo '<div class="divCell"><button type="submit" name="submit">speichern</button></div>';
-  echo '</form></div></div></div>';  
+  echo '</form></div></div>';  
   
   // call DB Data   
   $result = CV_DB::getTestsForEmployees();
@@ -155,11 +112,10 @@ function corona_admin_menu_CoronaTestOverview() {
       echo '<div class="tableContainer">
             <div class="divTable">
             <div class="divRow headerRow">
-            <div class="divCell header">Test Id</div>
             <div class="divCell header">Personen Id</div>
             <div class="divCell header">Vorname</div>
             <div class="divCell header">Nachname</div>
-            <div class="divCell header">Status</div>
+            <div class="divCell header">Test Id</div>
             <div class="divCell header">Test Datum</div>
             <div class="divCell header">Test Uhrzeit</div>
             <div class="divCell header">Testergebnis</div>
@@ -170,11 +126,10 @@ function corona_admin_menu_CoronaTestOverview() {
             // output data of each row
             foreach($result as $test_ergebnis) {
               echo '<div class="divRow">
-              <div class="divCell">'.$test_ergebnis->id.'</div>
               <div class="divCell">'.$test_ergebnis->persID.'</div>
               <div class="divCell">'.$test_ergebnis->vorname.'</div>
               <div class="divCell">'.$test_ergebnis->name.'</div>
-              <div class="divCell">'.$test_ergebnis->status.'</div>
+              <div class="divCell">'.$test_ergebnis->id.'</div>
               <div class="divCell">'.$test_ergebnis->datum.'</div>
               <div class="divCell">'.$test_ergebnis->zeit.'</div>
               <div class="divCell">'.$test_ergebnis->ergebnis.'</div>';
