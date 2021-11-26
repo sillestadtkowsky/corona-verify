@@ -5,7 +5,7 @@ ob_start();
 * Plugin Name:       Corona Test Verifyer
 * Plugin URI:        https://plugin.wp.osowsky-webdesign.de/
 * Description:       Quittiert das Ergebnis eines durchgeführten Test
-* Version:           1.1.5
+* Version:           1.1.6
 * Requires at least: 5.2
 * Requires PHP:      7.2
 * Author:            Silvio Osowsky
@@ -154,7 +154,7 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
     $testId = explode("=", $paramTestId)[1];
   }
 
-  $sql = "SELECT max(cv_test_for_employee.id) as laastTestId, cv_employeee.persID as persID, cv_employeee.vorname as vorname, cv_employeee.name as name, 
+  $sql = "SELECT cv_test_for_employee.id as lastTestId, cv_employeee.persID as persID, cv_employeee.vorname as vorname, cv_employeee.name as name, 
           cv_employeee.status as status,
           cv_test_for_employee.id as testId, DATE_FORMAT(cv_test_for_employee.dateTime, '%d.%m.%Y') as datum , 
           DATE_FORMAT(cv_test_for_employee.dateTime, '%H:%i') as zeit, cv_test_for_employee.ergebnis as ergebnis, 
@@ -162,13 +162,12 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
           CONCAT(' <i>', DATE_FORMAT(cv_test_for_employee.dateTime, '%d.%m.%Y'), ' - ', DATE_FORMAT(cv_test_for_employee.dateTime, '%H:%i'),' Uhr </i>') as dateTimeFull, 
           CONCAT(DATE_FORMAT(cv_test_for_employee.dateExpired, '%d.%m.%Y'), ' - ', DATE_FORMAT(cv_test_for_employee.dateExpired, '%H:%i')) as gueltig 
           FROM  cv_employeee RIGHT JOIN cv_test_for_employee ON cv_employeee.persID=cv_test_for_employee.persID
-          WHERE cv_employeee.persID = $personId";
+          WHERE cv_employeee.persID = $personId ORDER BY lastTestId DESC";
   $result = $wpdb->get_results($sql);
 
   echo '<div class="corona-verify-form">
       <div class="corna-verify-heading"><h1>3G Verifizierung</h1>';  
-          
-          foreach($result as $test_ergebnis) { 
+          $test_ergebnis = $result[0];
           if(call_user_func('isGueltig',$test_ergebnis->expired) == 1){
             echo '<div class="corna-verify-container-item">
                   <div class="paragraf"><p>Wir sind nach § 28 Infektionsschutzgesetz verpflichtet, 
@@ -204,7 +203,6 @@ function corona_login_shortcode( $atts, $content = null, $tag = '') {
             echo '<b>Dieser Link ist nicht mehr gültig</b>';
           }
             echo '</div></div>'; 
-          }
           echo '<div></div></div>';
 }
 
