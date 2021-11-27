@@ -30,7 +30,7 @@ class TestViewTable extends WP_List_Table
   {
     $data = CV_DB::getTestsForEmployeesArray();
 
-    $per_page = 10;
+    $per_page = 8;
     $current_page = $this->get_pagenum();
     $total_items = count($data);
     $this->set_pagination_args( array('total_items' => $total_items,'per_page' => $per_page ));
