@@ -69,12 +69,6 @@ class TestViewTable extends WP_List_Table
     }
   }
 
-
-  function deleteEmployee($actions)
-  {
-    echo 'delete';
-  }
-
   function get_sortable_columns()
   {
     $sortable_columns = array(
@@ -102,13 +96,13 @@ class TestViewTable extends WP_List_Table
 
   function column_name($item)
   {
-
+    $delete_nonce = wp_create_nonce( 'delete_employee' );
     $actions = array(
-      'delete'    => sprintf('<a href="?page=%s&action=%s&id[]=%s">Löschen</a>', '' . $_REQUEST["page"] . '', 'delete', $item['id']),
+      'delete'    => sprintf('<a href="?page=%s&action=%s&persId[]=%s&_wpnonce=%s">Löschen</a>', '' . $_REQUEST["page"] . '', 'delete', $item['id'],$delete_nonce),
     );
 
     return sprintf(
-      '%1$s <span style="color:silver ; display : none;">(id:%2$s)</span>%3$s',
+      '%1$s <span style="color:silver ; display : none;">(persId:%2$s)</span>%3$s',
       /*$1%s*/
       $item['lastname'],
       /*$2%s*/
@@ -121,11 +115,12 @@ class TestViewTable extends WP_List_Table
   function column_cb($item)
   {
     return sprintf(
-      '<input type="checkbox" lastname="%1$s[]" value="%2$s" />',
-      $item['id'], 
-      $item['id']
+      '<input type="checkbox" name="%1$s[]" value="%2$s" />',
+      'id',  //Let's simply repurpose the table's singular label ("plugin")
+      $item['id']                //The value of the checkbox should be the record's id
     );
   }
+
   function get_bulk_actions()
   {
     $actions = array(
@@ -137,18 +132,25 @@ class TestViewTable extends WP_List_Table
   public function process_bulk_action()
   {
 
-    // If the delete bulk action is triggered
-    $action = $this->current_action();
-    if ('delete' === $action) {
-      $delete_ids = esc_sql($_GET['id']);
-      // loop over the array of record IDs and delete them
-      foreach ($delete_ids as $did) {
-        global $wpdb;
-        $wpdb->query($wpdb->prepare("DELETE FROM mncplugin WHERE id='" . $did . "'"));
-      }
+    //Detect when a bulk action is being triggered...
+    if ( 'delete' === $this->current_action() ) {
 
-      wp_redirect(esc_url(add_query_arg()));
+      // In our file that handles the request, verify the nonce.
+      $nonce = esc_attr( $_GET['_wpnonce'] );
+      echo ''. wp_verify_nonce( $nonce, 'delete_employee' );
+      //if ( ! wp_verify_nonce( $nonce, 'delete_employee' ) ) {
+      if ( false ) {
+        die( 'Go get a life script kiddies' );
+      }
+      else {
+      $delete_ids = esc_sql( $_GET['id'] );
+            // loop over the array of record IDs and delete them
+      foreach ( $delete_ids as $id ) {
+        echo ''. CV_DB::deleteTestsForEmployees( $id );
+      }
+      wp_redirect( esc_url( add_query_arg() ) );
       exit;
     }
+  }
   }
 }

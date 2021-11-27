@@ -97,7 +97,7 @@ function corona_admin_menu_CoronaTestOverview() {
   echo '<div class="divCell"><button type="submit" name="submit">speichern</button></div>';
   echo '</form></div>';  
   
-      if(isset($_POST['submit'])){
+    if(isset($_POST['submit'])){
         $id=$_POST['id'];
         $datum=$_POST['datum'];
         $ergebnis=$_POST['ergebnis'];
@@ -112,6 +112,7 @@ function corona_admin_menu_CoronaTestOverview() {
         echo '</div></div>';  
 
     }
+    
     $myListTable = new TestViewTable();
     echo '<div class="wrap"><h3>Registrierte Mitarbeiter</h3>';
     

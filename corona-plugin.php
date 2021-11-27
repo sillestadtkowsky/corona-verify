@@ -5,7 +5,7 @@ ob_start();
  * Plugin Name:       Corona Test Verifyer
  * Plugin URI:        https://plugin.wp.osowsky-webdesign.de/
  * Description:       Quittiert das Ergebnis eines durchgeführten Test
- * Version:           1.2.3
+ * Version:           1.2.4
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Silvio Osowsky
