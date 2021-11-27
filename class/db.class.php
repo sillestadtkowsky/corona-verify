@@ -45,6 +45,22 @@ class CV_DB
 		return $result;
 	}
 
+	public static function deleteTestsForEmployees($id)
+	{
+		global $wpdb;
+		$query = '';
+
+		$query .=
+			'DELETE 
+		FROM 
+			' . $wpdb->prefix . 'corona_test_to_employee 
+		WHERE
+		' . $wpdb->prefix . 'corona_test_to_employee.id = ' . $id;
+
+		$result = $wpdb->get_results($query);
+		return '<div class="success">Der Test wurde erfolgreich geslöscht.</div>';
+	}
+
 	public static function getEmployees()
 	{
 		global $wpdb;
@@ -67,17 +83,17 @@ class CV_DB
 		$query = '';
 
 		$query .=
-			'DELETE * 
+			'DELETE 
 		FROM 
-			' . $wpdb->prefix . 'corona_employee as employee
+			' . $wpdb->prefix . 'corona_employee 
 		WHERE
-			employee.persId = ' . id;
+		' . $wpdb->prefix . 'corona_employee.persId = ' . $id;
 
 		$result = $wpdb->get_results($query);
-		return $result;
+		return '<div class="success">Der Mitarbeiter wurde erfolgreich geslöscht.</div>';
 	}
 
-	public static function getEmployeesArray()
+	public static function getEmployeesArray($do_search)
 	{
 		global $wpdb;
 		$query = '';
@@ -86,6 +102,7 @@ class CV_DB
 			'SELECT employee.persId as persId , employee.firstname as firstname, employee.lastname as lastname 
 		FROM 
 			' . $wpdb->prefix . 'corona_employee as employee
+			' . $do_search. '
 		ORDER BY
 			employee.persId';
 
