@@ -12,9 +12,9 @@ class EmployeeTable extends WP_List_Table
   {
     $columns = array(
       'cb' => '<input type="checkbox" />',
-      'name'      => 'Nachname',
-      'vorname'    => 'Vorname',
-      'persID' => 'Person Nummer'
+      'lastname'      => 'Nachname',
+      'firstname'    => 'Vorname',
+      'persId' => 'Person Nummer'
     );
     return $columns;
   }
@@ -46,9 +46,9 @@ class EmployeeTable extends WP_List_Table
   function column_default($item, $column_name)
   {
     switch ($column_name) {
-      case 'persID':
-      case 'vorname':
-      case 'name':
+      case 'persId':
+      case 'firstname':
+      case 'lastname':
         return $item[$column_name];
       default:
         return print_r($item, false); //Show the whole array for troubleshooting purposes
@@ -64,34 +64,34 @@ class EmployeeTable extends WP_List_Table
   function get_sortable_columns()
   {
     $sortable_columns = array(
-      'persID'  => array('persID', true),
-      'vorname' => array('vorname', true),
-      'name'   => array('name', true)
+      'persId'  => array('persId', true),
+      'firstname' => array('firstname', true),
+      'lastname'   => array('lastname', true)
     );
     return $sortable_columns;
   }
 
   function usort_reorder($a, $b)
   {
-    $orderby = (!empty($_GET['orderby'])) ? $_GET['orderby'] : 'name';
+    $orderby = (!empty($_GET['orderby'])) ? $_GET['orderby'] : 'lastname';
     $order = (!empty($_GET['order'])) ? $_GET['order'] : 'asc';
-    $result = strcmp($a[$orderby], $b[$orderby]);
-    return ($order === 'desc') ? $result : -$result;
+    $testresult = strcmp($a[$orderby], $b[$orderby]);
+    return ($order === 'desc') ? $testresult : -$testresult;
   }
 
   function column_name($item)
   {
 
     $actions = array(
-      'delete'    => sprintf('<a href="?page=%s&action=%s&persID[]=%s">Löschen</a>', '' . $_REQUEST["page"] . '', 'delete', $item['persID']),
+      'delete'    => sprintf('<a href="?page=%s&action=%s&persId[]=%s">Löschen</a>', '' . $_REQUEST["page"] . '', 'delete', $item['persId']),
     );
 
     return sprintf(
       '%1$s <span style="color:silver ; display : none;">(id:%2$s)</span>%3$s',
       /*$1%s*/
-      $item['name'],
+      $item['lastname'],
       /*$2%s*/
-      $item['persID'],
+      $item['persId'],
       /*$3%s*/
       $this->row_actions($actions)
     );
@@ -100,9 +100,9 @@ class EmployeeTable extends WP_List_Table
   function column_cb($item)
   {
     return sprintf(
-      '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-      $item['persID'],  //Let's simply repurpose the table's singular label ("plugin")
-      $item['persID']                //The value of the checkbox should be the record's id
+      '<input type="checkbox" lastname="%1$s[]" value="%2$s" />',
+      $item['persId'],  //Let's simply repurpose the table's singular label ("plugin")
+      $item['persId']                //The value of the checkbox should be the record's id
     );
   }
   function get_bulk_actions()
@@ -119,7 +119,7 @@ class EmployeeTable extends WP_List_Table
     // If the delete bulk action is triggered
     $action = $this->current_action();
     if ('delete' === $action) {
-      $delete_ids = esc_sql($_GET['persID']);
+      $delete_ids = esc_sql($_GET['persId']);
       // loop over the array of record IDs and delete them
       foreach ($delete_ids as $did) {
         global $wpdb;

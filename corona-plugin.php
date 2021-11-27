@@ -5,7 +5,7 @@ ob_start();
  * Plugin Name:       Corona Test Verifyer
  * Plugin URI:        https://plugin.wp.osowsky-webdesign.de/
  * Description:       Quittiert das Ergebnis eines durchgeführten Test
- * Version:           1.2.1
+ * Version:           1.2.2
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Silvio Osowsky
@@ -119,9 +119,9 @@ function corona_verify_shortcode($atts, $content = null, $tag = '')
                   Wir versichern, dass jede Person, für die hier ein gültiger Status angezeigt wird, eine der vorgenannten Bedingungen erfüllt.</p></div>
                   <div class="corna-verify-container">
                   <label>Name</label>
-                  <div class="name"><b>' . $test_ergebnis->vorname . ' ' . $test_ergebnis->name . '</b></div>
-                  <div class="ergebnis">';
-      if ($test_ergebnis->ergebnis === 'positiv') {
+                  <div class="lastname"><b>' . $test_ergebnis->firstname . ' ' . $test_ergebnis->lastname . '</b></div>
+                  <div class="testresult">';
+      if ($test_ergebnis->testresult === 'positiv') {
         echo '<div class="positiv">';
         echo '<b>Unser Mitarbeiter hat <u>KEINEN</u> gültigen 3-G Status</b>';
       } else {
@@ -132,11 +132,11 @@ function corona_verify_shortcode($atts, $content = null, $tag = '')
           $testId = get_query_var('testId', -1);
           if ($personId == -1 || $testId == -1) {
             $personId = get_current_user_id();
-            $testId = $test_ergebnis->persID;
+            $testId = $test_ergebnis->persId;
           }
           if ($showQR) {
             echo '<div class="qr">';
-            echo '' . CV_QR::getCode($test_ergebnis->persID, $testId);
+            echo '' . CV_QR::getCode($test_ergebnis->persId, $testId);
             echo '</div>';
           }
         }

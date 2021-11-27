@@ -67,8 +67,10 @@ function corona_admin_menu_CoronaTestOverview() {
   echo '<form method="POST">';
   echo '<div class="divRow">';
   
+  // lade Mitarbeiter Daten aus DB
   $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
   
+  // zeige Mitarbeiter DropDown
   echo '<div class="divCell"><b>Mitarbeiter </b><select placeholder="Mitarbeiter" name="id" id="id">';
   echo '<option value=""></option>';
   
@@ -77,7 +79,11 @@ function corona_admin_menu_CoronaTestOverview() {
   }
   
   echo '</select></div>';
+
+  // Testzeitpunkt
   echo '<div class="divCell"><b>Datum </b><input class="input-text" type="datetime-local"" name="datum" placeholder="Datum"/></div>';
+  
+  // zeige Testergebnis DropDown
   echo '<div class="divCell"><b>Testergebnis </b><select placeholder="Testergebnis" name="ergebnis" id="ergebnis">';
   echo '<option value=""></option>
   <option value="negativ">Negativ</option>

@@ -7,17 +7,17 @@ class CV_DB
 		$query = '';
 
 		$query .=
-			'SELECT employee.persID, employee.vorname as vorname, employee.name as name,
-		tests.id as id, tests.persId as persID, DATE_FORMAT(tests.dateTime, "%d.%m.%Y") as datum , 
-		DATE_FORMAT(tests.dateTime, "%H:%i")  as zeit, tests.ergebnis as ergebnis, 
+			'SELECT employee.persId, employee.firstname as firstname, employee.lastname as lastname,
+		tests.id as id, tests.persId as persId, DATE_FORMAT(tests.dateTime, "%d.%m.%Y") as datum , 
+		DATE_FORMAT(tests.dateTime, "%H:%i")  as zeit, tests.testresult as testresult, 
 		tests.symptom as symptom , 
 		DATE_FORMAT(tests.dateExpired, "%d.%m.%Y") as expiredDate, DATE_FORMAT(tests.dateExpired, "%H:%i") as expiredTime 
 		FROM 
 			' . $wpdb->prefix . 'corona_employee as employee
 		RIGHT JOIN 
-			' . $wpdb->prefix . 'corona_test_to_employee as tests ON employee.persID = tests.persID
+			' . $wpdb->prefix . 'corona_test_to_employee as tests ON employee.persId = tests.persId
 		ORDER BY
-			employee.persID, tests.id DESC';
+			employee.persId, tests.id DESC';
 
 		$result = $wpdb->get_results($query);
 		return $result;
@@ -29,17 +29,17 @@ class CV_DB
 		$query = '';
 
 		$query .=
-			'SELECT employee.persID, employee.vorname as vorname, employee.name as name,
-		tests.id as id, tests.persId as persID, DATE_FORMAT(tests.dateTime, "%d.%m.%Y") as datum , 
-		DATE_FORMAT(tests.dateTime, "%H:%i")  as zeit, tests.ergebnis as ergebnis, 
+			'SELECT employee.persId, employee.firstname as firstname, employee.lastname as lastname,
+		tests.id as id, tests.persId as persId, DATE_FORMAT(tests.dateTime, "%d.%m.%Y") as datum , 
+		DATE_FORMAT(tests.dateTime, "%H:%i")  as zeit, tests.testresult as testresult, 
 		tests.symptom as symptom , 
 		DATE_FORMAT(tests.dateExpired, "%d.%m.%Y") as expiredDate, DATE_FORMAT(tests.dateExpired, "%H:%i") as expiredTime 
 		FROM 
 			' . $wpdb->prefix . 'corona_employee as employee
 		RIGHT JOIN 
-			' . $wpdb->prefix . 'corona_test_to_employee as tests ON employee.persID = tests.persID
+			' . $wpdb->prefix . 'corona_test_to_employee as tests ON employee.persId = tests.persId
 		ORDER BY
-			employee.persID, tests.id DESC';
+			employee.persId, tests.id DESC';
 
 		$result = $wpdb->get_results($query,ARRAY_A);
 		return $result;
@@ -51,11 +51,11 @@ class CV_DB
 		$query = '';
 
 		$query .=
-			'SELECT employee.persID as persID , employee.vorname as vorname, employee.name as name 
+			'SELECT employee.persId as persId , employee.firstname as firstname, employee.lastname as lastname 
 		FROM 
 			' . $wpdb->prefix . 'corona_employee as employee
 		ORDER BY
-			employee.persID';
+			employee.persId';
 
 		$result = $wpdb->get_results($query);
 		return $result;
@@ -71,7 +71,7 @@ class CV_DB
 		FROM 
 			' . $wpdb->prefix . 'corona_employee as employee
 		WHERE
-			employee.persID = ' . id;
+			employee.persId = ' . id;
 
 		$result = $wpdb->get_results($query);
 		return $result;
@@ -83,11 +83,11 @@ class CV_DB
 		$query = '';
 
 		$query .=
-			'SELECT employee.persID as persID , employee.vorname as vorname, employee.name as name 
+			'SELECT employee.persId as persId , employee.firstname as firstname, employee.lastname as lastname 
 		FROM 
 			' . $wpdb->prefix . 'corona_employee as employee
 		ORDER BY
-			employee.persID';
+			employee.persId';
 
 		$result = $wpdb->get_results($query, ARRAY_A);
 		return $result;
@@ -99,7 +99,7 @@ class CV_DB
 		$query = '';
 
 		$query .=
-			'INSERT INTO ' . $wpdb->prefix . 'corona_employee (persID, vorname, name) VALUES (' . $id . ', "' . $firstname . '", "' . $lastname . '")';
+			'INSERT INTO ' . $wpdb->prefix . 'corona_employee (persId, firstname, lastname) VALUES (' . $id . ', "' . $firstname . '", "' . $lastname . '")';
 
 		$result = $wpdb->get_results($query);
 
@@ -108,13 +108,13 @@ class CV_DB
 		}
 	}
 
-	public static function insertTestForEmployee($id, $timestamp, $ergebnis, $symptom, $expired)
+	public static function insertTestForEmployee($id, $timestamp, $testresult, $symptom, $expired)
 	{
 		global $wpdb;
 		$query = '';
 
 		$query .=
-			'INSERT INTO ' . $wpdb->prefix . 'corona_test_to_employee (persId, dateTime, ergebnis, symptom, dateExpired) VALUES (' . $id . ', "' . $timestamp . '", "' . $ergebnis . '","' . $symptom . '","' . $expired . '")';
+			'INSERT INTO ' . $wpdb->prefix . 'corona_test_to_employee (persId, dateTime, testresult, symptom, dateExpired) VALUES (' . $id . ', "' . $timestamp . '", "' . $testresult . '","' . $symptom . '","' . $expired . '")';
 
 		$result = $wpdb->get_results($query);
 
@@ -129,18 +129,18 @@ class CV_DB
 		$query = '';
 
 		$query .=
-			'SELECT test.id as lastTestId, employee.persID as persID, employee.vorname as vorname, employee.name as name,
+			'SELECT test.id as lastTestId, employee.persId as persId, employee.firstname as firstname, employee.lastname as lastname,
           test.id as testId, DATE_FORMAT(test.dateTime, "%d.%m.%Y") as datum , 
-          DATE_FORMAT(test.dateTime, "%H:%i") as zeit, test.ergebnis as ergebnis, 
+          DATE_FORMAT(test.dateTime, "%H:%i") as zeit, test.testresult as testresult, 
           test.symptom as symptom, test.dateExpired as expired, 
           CONCAT(" <i>", DATE_FORMAT(test.dateTime, "%d.%m.%Y"), " - ", DATE_FORMAT(test.dateTime, "%H:%i")," Uhr </i>") as dateTimeFull, 
           CONCAT(DATE_FORMAT(test.dateExpired, "%d.%m.%Y"), " - ", DATE_FORMAT(test.dateExpired, "%H:%i")) as gueltig
 		FROM 
 			' . $wpdb->prefix . 'corona_employee as employee 
 		RIGHT JOIN 
-			' . $wpdb->prefix . 'corona_test_to_employee as test ON employee.persID = test.persID 
+			' . $wpdb->prefix . 'corona_test_to_employee as test ON employee.persId = test.persId 
 		WHERE 
-			employee.persID = ' . $personId . ' 
+			employee.persId = ' . $personId . ' 
 		ORDER BY
 			test.id DESC';
 
@@ -154,18 +154,18 @@ class CV_DB
 		$query = '';
 
 		$query .=
-			'SELECT test.id as lastTestId, employee.persID as persID, employee.vorname as vorname, employee.name as name,
+			'SELECT test.id as lastTestId, employee.persId as persId, employee.firstname as firstname, employee.lastname as lastname,
           test.id as testId, DATE_FORMAT(test.dateTime, "%d.%m.%Y") as datum , 
-          DATE_FORMAT(test.dateTime, "%H:%i") as zeit, test.ergebnis as ergebnis, 
+          DATE_FORMAT(test.dateTime, "%H:%i") as zeit, test.testresult as testresult, 
           test.symptom as symptom, test.dateExpired as expired, 
           CONCAT(" <i>", DATE_FORMAT(test.dateTime, "%d.%m.%Y"), " - ", DATE_FORMAT(test.dateTime, "%H:%i")," Uhr </i>") as dateTimeFull, 
           CONCAT(DATE_FORMAT(test.dateExpired, "%d.%m.%Y"), " - ", DATE_FORMAT(test.dateExpired, "%H:%i")) as gueltig
 		FROM 
 			' . $wpdb->prefix . 'corona_employee as employee 
 		RIGHT JOIN 
-			' . $wpdb->prefix . 'corona_test_to_employee as test ON employee.persID = test.persID 
+			' . $wpdb->prefix . 'corona_test_to_employee as test ON employee.persId = test.persId 
 		WHERE 
-			employee.persID = ' . $personId . ' 
+			employee.persId = ' . $personId . ' 
 		ORDER BY
 			test.id DESC';
 

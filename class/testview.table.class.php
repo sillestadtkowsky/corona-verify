@@ -12,13 +12,13 @@ class TestViewTable extends WP_List_Table
   {
     $columns = array(
       'cb' => '<input type="checkbox" />',
-      'persID' => 'Person Nummer',
-      'vorname' => 'Vorname',
-      'name' => 'Nachname',
+      'persId' => 'Person Nummer',
+      'firstname' => 'Vorname',
+      'lastname' => 'Nachname',
       'id' => 'Test Nummer',
       'datum' => 'Test Datum',
       'zeit' => 'Test Uhrzeit',
-      'ergebnis' => 'Test Ergebnis',
+      'testresult' => 'Test Ergebnis',
       'symptom' => 'Sympthome',
       'expiredDate' => 'Gültigkeit Datum',
       'expiredTime' => 'Gültigkeit Uhrzeit'
@@ -53,13 +53,13 @@ class TestViewTable extends WP_List_Table
   function column_default($item, $column_name)
   {
     switch ($column_name) {
-      case 'persID':
-      case 'vorname':
-      case 'name':
+      case 'persId':
+      case 'firstname':
+      case 'lastname':
       case 'id':
       case 'datum':
       case 'zeit':
-      case 'ergebnis':
+      case 'testresult':
       case 'symptom':
       case 'expiredDate':
       case 'expiredTime':
@@ -78,13 +78,13 @@ class TestViewTable extends WP_List_Table
   function get_sortable_columns()
   {
     $sortable_columns = array(
-      'persID' => array('persID', true),
-      'vorname' => array('vorname', true),
-      'name'   => array('name', true),
+      'persId' => array('persId', true),
+      'firstname' => array('firstname', true),
+      'lastname'   => array('lastname', true),
       'id' => array('id', true),
       'datum' => array('datum', true),
       'zeit' => array('zeit', true),
-      'ergebnis' => array('ergebnis', true),
+      'testresult' => array('testresult', true),
       'symptom' => array('symptom', true),
       'expiredDate' => array('expiredDate', true),
       'expiredTime' => array('expiredTime', true)
@@ -96,8 +96,8 @@ class TestViewTable extends WP_List_Table
   {
     $orderby = (!empty($_GET['orderby'])) ? $_GET['orderby'] : 'id';
     $order = (!empty($_GET['order'])) ? $_GET['order'] : 'asc';
-    $result = strcmp($a[$orderby], $b[$orderby]);
-    return ($order === 'desc') ? $result : -$result;
+    $testresult = strcmp($a[$orderby], $b[$orderby]);
+    return ($order === 'desc') ? $testresult : -$testresult;
   }
 
   function column_name($item)
@@ -110,7 +110,7 @@ class TestViewTable extends WP_List_Table
     return sprintf(
       '%1$s <span style="color:silver ; display : none;">(id:%2$s)</span>%3$s',
       /*$1%s*/
-      $item['name'],
+      $item['lastname'],
       /*$2%s*/
       $item['id'],
       /*$3%s*/
@@ -121,7 +121,7 @@ class TestViewTable extends WP_List_Table
   function column_cb($item)
   {
     return sprintf(
-      '<input type="checkbox" name="%1$s[]" value="%2$s" />',
+      '<input type="checkbox" lastname="%1$s[]" value="%2$s" />',
       $item['id'], 
       $item['id']
     );
