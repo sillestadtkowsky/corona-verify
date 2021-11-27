@@ -5,7 +5,7 @@ ob_start();
  * Plugin Name:       Corona Test Verifyer
  * Plugin URI:        https://plugin.wp.osowsky-webdesign.de/
  * Description:       Quittiert das Ergebnis eines durchgeführten Test
- * Version:           1.2.0
+ * Version:           1.2.1
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Silvio Osowsky
@@ -56,8 +56,8 @@ add_action('wp_enqueue_scripts', 'wpdocs_register_plugin_styles');
 function corona_menu_creator()
 {
   add_menu_page('Corona Verify Seite', 'Corona-Admin', 'manage_options', 'corona-admin-menu', 'corona_admin_menu', 'dashicons-editor-customchar', 4);
-  add_submenu_page('corona-admin-menu', 'Mitarbeiter-Liste', 'Mitarbeiter', 'manage_options', 'corona_admin_menu_CoronaEmployees', 'corona_admin_menu_CoronaEmployees');
-  add_submenu_page('corona-admin-menu', 'Mitarbeiter-Testübersicht', 'Testübersicht', 'manage_options', 'corona_admin_menu_CoronaTestOverview', 'corona_admin_menu_CoronaTestOverview');
+  add_submenu_page('corona-admin-menu', 'Mitarbeiter-Liste', 'Mitarbeiter', 'manage_options', 'coronaEmployees', 'corona_admin_menu_CoronaEmployees');
+  add_submenu_page('corona-admin-menu', 'Mitarbeiter-Testübersicht', 'Testübersicht', 'manage_options', 'coronaTestOverview', 'corona_admin_menu_CoronaTestOverview');
   //add_submenu_page('corona-admin-menu', 'WP Table Example', 'WP Table Example', 'manage_options', 'corona_admin_menu_WpTableExample', 'corona_admin_menu_WpTableExample');
 
   wp_register_style('corona-style', plugins_url('/css/front-style.css', __FILE__));

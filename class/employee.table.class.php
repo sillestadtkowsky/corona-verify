@@ -14,7 +14,7 @@ class EmployeeTable extends WP_List_Table
       'cb' => '<input type="checkbox" />',
       'name'      => 'Nachname',
       'vorname'    => 'Vorname',
-      'persID' => 'Personen ID'
+      'persID' => 'Person Nummer'
     );
     return $columns;
   }

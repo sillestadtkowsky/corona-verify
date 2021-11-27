@@ -119,7 +119,7 @@ class CV_DB
 		$result = $wpdb->get_results($query);
 
 		if ($result > 0) {
-			return '<div>Der Test für den Mitarbeiter wurde erfolgreich angelegt.</div>';
+			return '<div class="success">Der Test für den Mitarbeiter wurde erfolgreich angelegt.</div>';
 		}
 	}
 

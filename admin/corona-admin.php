@@ -15,7 +15,7 @@ function corona_admin_menu_CoronaEmployees() {
   echo '<div class="wrap"><h2>Übersicht der registrierten Mitarbeiter</h2></div>';
   echo '<div class="wrap"><h3>Einen Mitarbeiter erfassen</h3></div>';
   echo '<form method="POST">';
-  echo '<div class="wrap"><div class="divRow">';
+  echo '<div class="divRow">';
   $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
   echo '<div class="divCell"><b>Mitarbeiter </b><select placeholder="Mitarbeiter" name="id" id="id">';
   echo '<option value=""></option>';
@@ -24,7 +24,7 @@ function corona_admin_menu_CoronaEmployees() {
   }
   echo '</select></div>';
   echo '<div class="divCell"><button type="submit" name="submit">speichern</button></div>';
-  echo '</form></div></div>'; 
+  echo '</form></div>'; 
 
   if(isset($_POST['submit'])){
     $id=$_POST['id'];
@@ -37,8 +37,10 @@ function corona_admin_menu_CoronaEmployees() {
 
     if(null!=$id && null!=$id && null!=$lastname){
       echo ''. CV_DB::insertEmployee($id, $firstname, $lastname);
+      echo '</div></div>';  
     }else{
       echo "Bitte alle Felder ausfüllen";
+      echo '</div></div>';  
     }
   }
 
@@ -61,9 +63,9 @@ function corona_admin_menu_CoronaTestOverview() {
 
   echo '<div class="wrap"><h2>Übersicht durchgeführter Tests pro Mitarbeiter</h2></div>';    
   global $wpdb;
-  echo '<div class="wrap"><h3>Einen Corona Test erfassen</h3></div>';
+  echo '<div class="wrap"><h3>Einen Corona Test erfassen</h3>';
   echo '<form method="POST">';
-  echo '<div class=""><div class="divRow">';
+  echo '<div class="divRow">';
   
   $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
   
@@ -87,7 +89,7 @@ function corona_admin_menu_CoronaTestOverview() {
   <option value="1">Ja</option>
   </select></div>';
   echo '<div class="divCell"><button type="submit" name="submit">speichern</button></div>';
-  echo '</form></div></div>';  
+  echo '</form></div>';  
   
       if(isset($_POST['submit'])){
         $id=$_POST['id'];
@@ -101,6 +103,7 @@ function corona_admin_menu_CoronaTestOverview() {
         $timestamp = date('Y-m-d H:i:s');
   
         echo ''. CV_DB::insertTestForEmployee($id, $timestamp, $ergebnis, $symptom, $expired); 
+        echo '</div></div>';  
 
     }
     $myListTable = new TestViewTable();
