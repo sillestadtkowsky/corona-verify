@@ -10,7 +10,7 @@
 	"requires_php" : "7.2",
 	"last_updated" : "2021-11-25 02:10:00",
 	"sections" : {
-		"description" : "Diese Plugin erlaubt das digitale Vorzeigen von einem  3G Staus für Mitarbeiter einer Firma",
+		"description" : "Dieses Plugin erlaubt jedem Mitarbeiter das digitale Vorzeigen eines gültigen 3G-Status, nach dem dieser zentral im Betrieb erfasst wurde. Für den Gegencheck wird zusätzlich ein QR-Code erzeugt, der eine zeitlich beschränkte Gültigkeit hat. ",
 		"installation" : "Klicke bitte den aktivieren Knopf.",
 		"changelog" : "<h4>1.2.5 –  24 November 2021</h4><ul><li>Bug fixes.</li><li>Initital release.</li></ul>"
 	},
