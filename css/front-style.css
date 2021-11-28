@@ -2,6 +2,20 @@
 Corona-Verify Styles
 ********************************/
 
+div {
+    margin-bottom: 10px;
+  }
+  
+input:invalid+span:after {
+    content: '✖';
+    padding-left: 5px;
+}
+  
+input:valid+span:after {
+    content: '✓';
+    padding-left: 5px;
+}
+
 .corona-verify-form {
     padding: 30px;
     display: block;
@@ -60,7 +74,6 @@ Corona-Verify Styles
 .headerRow {
     background-color: lightgray !important;
 }
-
 
 .corna-verify-heading {
     display: block;

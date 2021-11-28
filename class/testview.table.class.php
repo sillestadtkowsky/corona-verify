@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/db.class.php';
+require_once __DIR__ . '/option.class.php';
 
 if (!class_exists('WP_List_Table')) {
   require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
@@ -28,9 +29,10 @@ class TestViewTable extends WP_List_Table
 
   function prepare_items()
   {
+    $options = new CV_OPTIONS();
     $data = CV_DB::getTestsForEmployeesArray();
 
-    $per_page = 8;
+    $per_page = $options->readOption($options::C_TABLE_MAX_ROWS);
     $current_page = $this->get_pagenum();
     $total_items = count($data);
     $this->set_pagination_args( array('total_items' => $total_items,'per_page' => $per_page ));

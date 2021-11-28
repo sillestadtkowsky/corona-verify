@@ -4,7 +4,7 @@ ob_start();
  *
  * Plugin Name:       Corona Test Verifyer
  * Plugin URI:        https://plugin.wp.osowsky-webdesign.de/
- * Description:       Quittiert das Ergebnis eines durchgeführten Test
+ * Description:       Dieses Plugin erlaubt jedem Mitarbeiter das digitale Vorzeigen eines gültigen 3G-Status, nach dem dieser zentral im Betrieb erfasst wurde. Für den Gegencheck wird zusätzlich ein QR-Code erzeugt, der eine zeitlich beschränkte Gültigkeit hat.
  * Version:           1.2.4
  * Requires at least: 5.2
  * Requires PHP:      7.2
@@ -18,11 +18,12 @@ ob_start();
 /*
 * Load required classes
 */
-require_once('class/db.class.php');
-require_once('class/utils.class.php');
-require_once('class/secure.class.php');
-require_once('class/qr.class.php');
-require_once('admin/corona-admin.php');
+require_once __DIR__ . '/class/db.class.php';
+require_once __DIR__ . '/class/utils.class.php';
+require_once __DIR__ . '/class/secure.class.php';
+require_once __DIR__ . '/class/qr.class.php';
+require_once __DIR__ . '/class/option.class.php';
+require_once __DIR__ . '/admin/corona-admin.php';
 
 /*
 * set defaults
@@ -43,9 +44,11 @@ if (!function_exists('fa_custom_setup_cdn_webfont')) {
 function wpdocs_register_plugin_styles()
 {
   wp_register_style('corona-style', plugins_url('/css/front-style.css', __FILE__));
+  wp_register_style('table-style', plugins_url('/css/table.css', __FILE__));
   wp_register_style('corona-style-fa', plugins_url('/css/fa/css/all.css', __FILE__));
   wp_enqueue_style('corona-style-fa');
   wp_enqueue_style('corona-style');
+  wp_enqueue_style('table-style');
 }
 add_action('wp_enqueue_scripts', 'wpdocs_register_plugin_styles');
 
@@ -61,17 +64,13 @@ function corona_menu_creator()
   //add_submenu_page('corona-admin-menu', 'WP Table Example', 'WP Table Example', 'manage_options', 'corona_admin_menu_WpTableExample', 'corona_admin_menu_WpTableExample');
 
   wp_register_style('corona-style', plugins_url('/css/front-style.css', __FILE__));
+  wp_register_style('table-style', plugins_url('/css/table.css', __FILE__));
   wp_register_style('corona-style-fa', plugins_url('/css/fa/css/all.css', __FILE__));
   wp_register_script('corona-script', plugins_url('/js/corona.js', __FILE__));
   wp_enqueue_style('corona-style-fa');
+  wp_enqueue_style('table-style');
   wp_enqueue_style('corona-style');
   wp_enqueue_script('corona-script');
-}
-
-function corona_admin_menu()
-{
-  echo '<div class="wrap"><h1>Willkommen im Corona Verify Admin Dashboard</h2></div>';
-  echo '<div class="wrap">Hier haben Sie die Möglichkeit, die Mitarbeiter Ihrer Firma zu hinterlegen und durchgführte Corona Test zu dokumentieren.</div>';
 }
 add_action('admin_menu', 'corona_menu_creator');
 
@@ -82,6 +81,7 @@ add_action('admin_menu', 'corona_menu_creator');
 function corona_verify_shortcode($atts, $content = null, $tag = '')
 {
   global $wpdb;
+  $options = new CV_OPTIONS();
 
   $a = shortcode_atts(array(
     'qr' => '0',
@@ -108,7 +108,7 @@ function corona_verify_shortcode($atts, $content = null, $tag = '')
   $result = CV_DB::getLastTestForEmployee($personId);
 
   echo '<div class="corona-verify-form">
-      <div class="corna-verify-heading"><h1>3G Verifizierung</h1>';
+      <div class="corna-verify-heading"><h1>' .$options->readOption(CV_OPTIONS::C_VERIFIZIERUNG_KENNZEICHEN). ' Verifizierung</h1>';
   if ($wpdb->num_rows > 0) {
     $test_ergebnis = $result[0];
     if (CV_UTILS::isGueltig($test_ergebnis->expired) == 1) {
@@ -123,22 +123,21 @@ function corona_verify_shortcode($atts, $content = null, $tag = '')
                   <div class="testresult">';
       if ($test_ergebnis->testresult === 'positiv') {
         echo '<div class="positiv">';
-        echo '<b>Unser Mitarbeiter hat <u>KEINEN</u> gültigen 3-G Status</b>';
+        echo '<b>Unser Mitarbeiter hat <u>KEINEN</u> gültigen ' .$options->readOption(CV_OPTIONS::C_VERIFIZIERUNG_STATUS). ' Status</b>';
       } else {
         echo '<div class="negativ">';
-        echo '<div class="greenBackground"><div class="aktuellesDatum">' . $DateAndTime = date('d.m.Y H:i', time()) . ' Uhr</div> <b>3-G Status gültig</b></div>';
-        if ($qr == 1) {
+        echo '<div class="greenBackground"><div class="aktuellesDatum">' . $DateAndTime = date('d.m.Y H:i', time()) . ' Uhr</div> <b>' .$options->readOption(CV_OPTIONS::C_VERIFIZIERUNG_STATUS). ' Status gültig</b></div>';
+
+        if ($options->readOption(CV_OPTIONS::C_QR_CODE)==='yes') {
           $personId = get_query_var('persId', -1);
           $testId = get_query_var('testId', -1);
           if ($personId == -1 || $testId == -1) {
             $personId = get_current_user_id();
             $testId = $test_ergebnis->persId;
           }
-          if ($showQR) {
             echo '<div class="qr">';
             echo '' . CV_QR::getCode($test_ergebnis->persId, $testId);
             echo '</div>';
-          }
         }
       }
     } else {
