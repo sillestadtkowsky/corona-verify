@@ -36,7 +36,6 @@ date_default_timezone_set('Europe/Berlin');
 * init Plugin Updater
 */
 function corona_test_verifyer_push_update( $transient){
-  echo 'slug: ' .plugin_basename( __FILE__ );
   return CV_UPDATER::update($transient);
 }
 add_filter( 'site_transient_update_plugins', 'corona_test_verifyer_push_update');
