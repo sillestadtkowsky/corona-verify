@@ -70,12 +70,14 @@ echo "
               <th scope='row'>Verifizierungskennzeichen</th>
               <td>		
                 <input type='text' id='cv_verifizierungskennzeichen' name='cv_verifizierungskennzeichen' value='" .$options->readOption('cv_verifizierungskennzeichen'). "' class='regular-text'> 
+                <div class='option_info'>Wird im Kopf der Verifizierungsseite gezeigt.</div>
 				      </td>
             </tr>
             <tr class='cv_verifizierungsstatus'>
             <th scope='row'>Verifizierungsstatus</th>
             <td>		
               <input type='text' id='cv_verifizierungsstatus' name='cv_verifizierungsstatus' value='" .$options->readOption('cv_verifizierungsstatus'). "' class='regular-text'> 
+              <div class='option_info'>Wird als Status unterhalb eines negativen Testergebnis auf der Verifizierungsseite gezeigt.</div>
             </td>
           </tr>
             <tr class='cv_max_rows'>
@@ -83,6 +85,7 @@ echo "
             <td>		
               <input type='number' min='2' max='100' id='cv_max_rows' name='cv_max_rows' required value='" .$options->readOption('cv_max_rows'). "' class='regular-text'> 
               <span class='validity'></span>
+              <div class='option_info'>Legt fest, wie viele Zeilen in der Tabelle der Mitarbeiter und der Tabelle Mitarbeiter Tests angezeigt werden sollen.</div>
             </td>
           </tr>
             <tr class='cv_settings_update_time'>
@@ -101,6 +104,7 @@ echo "
                   echo " >";
                 }
                 echo "
+                <div class='option_info'>Legt fest, ob eine QR Code auf der Verifizierungsseite für einen Kunden angezeigt werden soll.</div>
               </td>
             </tr>
           </tbody>

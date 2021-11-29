@@ -5,7 +5,7 @@ ob_start();
  * Plugin Name:       Corona Test Verifyer
  * Plugin URI:        https://plugin.wp.osowsky-webdesign.de/
  * Description:       Dieses Plugin erlaubt jedem Mitarbeiter das digitale Vorzeigen eines gültigen 3G-Status, nach dem dieser zentral im Betrieb erfasst wurde. Für den Gegencheck wird zusätzlich ein QR-Code erzeugt, der eine zeitlich beschränkte Gültigkeit hat.
- * Version:           1.2.4
+ * Version:           1.2.9
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Silvio Osowsky
@@ -24,6 +24,61 @@ require_once __DIR__ . '/class/secure.class.php';
 require_once __DIR__ . '/class/qr.class.php';
 require_once __DIR__ . '/class/option.class.php';
 require_once __DIR__ . '/admin/corona-admin.php';
+
+add_filter( 'site_transient_update_plugins', 'misha_push_update' );
+ 
+function misha_push_update( $transient ){
+ 
+  global $plugin_data;
+	if ( empty( $transient->checked ) ) {
+		return $transient;
+	}
+
+	$remote = wp_remote_get( 
+		'https://plugin.wp.osowsky-webdesign.de/info.json',
+		array(
+			'timeout' => 10,
+			'headers' => array(
+				'Accept' => 'application/json'
+			)
+		)
+	);
+
+	if( is_wp_error( $remote ) || 200 !== wp_remote_retrieve_response_code( $remote ) || empty( wp_remote_retrieve_body( $remote ))){
+		return $transient;	
+	}
+
+  if ( is_admin() ) {
+    if( ! function_exists('get_plugin_data') ){
+        require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+    }
+    $plugin_data = get_plugin_data( __FILE__ );
+}
+	
+	$remote = json_decode( wp_remote_retrieve_body( $remote ) );
+ 
+		// your installed plugin version should be on the line below! You can obtain it dynamically of course 
+	if(
+		$remote
+		&& version_compare( $plugin_data['Version'], $remote->version, '<' )
+		&& version_compare( $remote->requires, get_bloginfo( 'version' ), '<' )
+		&& version_compare( $remote->requires_php, PHP_VERSION, '<' )
+	) {
+		
+		$res = new stdClass();
+		$res->slug = $remote->slug;
+		$res->plugin = plugin_basename( __FILE__ ); // it could be just YOUR_PLUGIN_SLUG.php if your plugin doesn't have its own directory
+		$res->new_version = $remote->version;
+		$res->tested = $remote->tested;
+		$res->package = $remote->download_url;
+		$transient->response[ $res->plugin ] = $res;
+		
+		//$transient->checked[$res->plugin] = $remote->version;
+	}
+ 
+	return $transient;
+
+}
 
 /*
 * set defaults
@@ -129,15 +184,17 @@ function corona_verify_shortcode($atts, $content = null, $tag = '')
         echo '<div class="greenBackground"><div class="aktuellesDatum">' . $DateAndTime = date('d.m.Y H:i', time()) . ' Uhr</div> <b>' .$options->readOption(CV_OPTIONS::C_VERIFIZIERUNG_STATUS). ' Status gültig</b></div>';
 
         if ($options->readOption(CV_OPTIONS::C_QR_CODE)==='yes') {
-          $personId = get_query_var('persId', -1);
-          $testId = get_query_var('testId', -1);
-          if ($personId == -1 || $testId == -1) {
-            $personId = get_current_user_id();
-            $testId = $test_ergebnis->persId;
+          if($showQR){
+            $personId = get_query_var('persId', -1);
+            $testId = get_query_var('testId', -1);
+            if ($personId == -1 || $testId == -1) {
+              $personId = get_current_user_id();
+              $testId = $test_ergebnis->persId;
+            }
+              echo '<div class="qr">';
+              echo '' . CV_QR::getCode($test_ergebnis->persId, $testId);
+              echo '</div>';
           }
-            echo '<div class="qr">';
-            echo '' . CV_QR::getCode($test_ergebnis->persId, $testId);
-            echo '</div>';
         }
       }
     } else {
