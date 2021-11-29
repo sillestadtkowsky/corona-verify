@@ -1,8 +1,10 @@
 <?php
+
+require_once __DIR__ . '/../corona-plugin.php';
 class CV_UPDATER
 {
-    public static function update( $transient ){
-        global $plugin_data;
+    public static function update( $transient, $pluginVersion){
+
         if ( empty( $transient->checked ) ) {
             return $transient;
         }
@@ -20,20 +22,13 @@ class CV_UPDATER
         if( is_wp_error( $remote ) || 200 !== wp_remote_retrieve_response_code( $remote ) || empty( wp_remote_retrieve_body( $remote ))){
             return $transient;	
         }
-
-        if ( is_admin() ) {
-            if( ! function_exists('get_plugin_data') ){
-                require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-            }
-            $plugin_data = get_plugin_data( __FILE__ );
-        }
-          
-            $remote = json_decode( wp_remote_retrieve_body( $remote ) );     
-            // your installed plugin version should be on the line below! You can obtain it dynamically of course 
-        if(
+ 
+        $remote = json_decode( wp_remote_retrieve_body( $remote ) );     
+        // your installed plugin version should be on the line below! You can obtain it dynamically of course 
+            if(
                 $remote
-                && version_compare( $plugin_data['Version'], $remote->version, '<' )
-                && version_compare( $remote->requires, get_bloginfo( 'version' ), '<' )
+                && version_compare( $pluginVersion, $remote->version, '<' )
+                && version_compare( $remote->requires, get_bloginfo( 'Version' ), '<' )
                 && version_compare( $remote->requires_php, PHP_VERSION, '<' )
         ) {
               
@@ -55,7 +50,7 @@ class CV_UPDATER
     * $action 'plugin_information'
     * $args stdClass Object ( [slug] => woocommerce [is_ssl] => [fields] => Array ( [banners] => 1 [reviews] => 1 [downloaded] => [active_installs] => 1 ) [per_page] => 24 [locale] => en_US )
     */
-    public static function info( $res, $action, $args ){
+    public static function info( $res, $action, $args){
 
         // do nothing if this is not about getting plugin information
         if( 'plugin_information' !== $action ) {
