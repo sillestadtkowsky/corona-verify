@@ -148,6 +148,7 @@ function corona_admin_menu_CoronaEmployees() {
   echo '<div class="wrap"><h3>Einen Mitarbeiter erfassen</h3></div>';
   echo '<div class="option_info">Hier finden Sie Benutzer, welche Sie vorab <a href="users.php">hier</a> als Benutzer im Wordpress angelegt haben.</br>Es werden Benutzer mit der Berechtigung <i>Administrator</i> und <i>Abonnent</i> gefunden.</div>';
   echo '<div class="tableContainer">';
+  echo '<form method="POST">';
   echo '<div class="divRow">';
   $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
   echo '<div class="divCell"><b>Mitarbeiter </b><select placeholder="Mitarbeiter" name="id" id="id">';

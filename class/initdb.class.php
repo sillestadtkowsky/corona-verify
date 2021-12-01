@@ -31,7 +31,7 @@ class CV_INITDB{
     
     private function createTestForEmployee(){
         global $wpdb;
-        $sql =  'DROP TABLE '.$wpdb->prefix .'corona_test_to_employee (
+        $sql =  'CREATE TABLE '.$wpdb->prefix .'corona_test_to_employee (
                 id mediumint(9) NOT NULL,
                 persId int(11) DEFAULT NULL,
                 dateTime datetime NOT NULL,
@@ -81,7 +81,7 @@ class CV_INITDB{
     /*
     * uninstall plugin
     */
-    public static function deIinstallDB(){
+    public static function deInstallDB(){
         $intiDbClass = new CV_INITDB();
         echo 'delete tables ';
       
@@ -110,7 +110,7 @@ class CV_INITDB{
 
     private function deleteDefaultOptions(){
         global $wpdb;
-        $sql =  'DELETE FROM '.$wpdb->prefix .'options WHERE '.$wpdb->prefix .'option_name like "cv_%";';
+        $sql =  'DELETE FROM '.$wpdb->prefix .'options WHERE option_name like "cv_%";';
         $wpdb->get_results($sql);        
         $wpdb->get_results('commit;');
 
