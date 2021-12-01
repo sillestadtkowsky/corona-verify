@@ -44,10 +44,8 @@ input:valid+span:after {
 }
 
 .tableContainer {
-    height: 50vh;
     overflow-y: scroll;
-    margin: 10px;
-    width: 50vw;
+    margin: 10px 0 50px 0;
 }
 
 .divTable {
@@ -73,6 +71,9 @@ input:valid+span:after {
 
 .headerRow {
     background-color: lightgray !important;
+}
+.option_info{
+    padding: 10px 0 10px 0;
 }
 
 .corna-verify-heading {

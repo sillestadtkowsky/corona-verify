@@ -6,6 +6,10 @@ class CV_INITDB{
     
     Const DB_VERSION = '1.0.0';
 
+    /*
+    * install plugin
+    */
+
     public static function installDB(){
         $intiDbClass = new CV_INITDB();
         $options = new CV_OPTIONS();
@@ -24,10 +28,10 @@ class CV_INITDB{
             $intiDbClass->setDefaultOptions();
         }
     }
-
-    private function createEmployee(){
+    
+    private function createTestForEmployee(){
         global $wpdb;
-        $sql =  'CREATE TABLE '.$wpdb->prefix .'corona_test_to_employee (
+        $sql =  'DROP TABLE '.$wpdb->prefix .'corona_test_to_employee (
                 id mediumint(9) NOT NULL,
                 persId int(11) DEFAULT NULL,
                 dateTime datetime NOT NULL,
@@ -47,7 +51,7 @@ class CV_INITDB{
 
     }
 
-    private function createTestForEmployee(){
+    private function createEmployee(){
         global $wpdb;
         $sql =  'CREATE TABLE '.$wpdb->prefix .'corona_employee (
                 id int(11) NOT NULL,
@@ -73,5 +77,42 @@ class CV_INITDB{
         $options->updateOrAddOption(CV_OPTIONS::C_VERIFIZIERUNG_STATUS, '3-G','','no' );
         $options->updateOrAddOption(CV_OPTIONS::C_QR_CODE, '','','no' );
         $options->updateOrAddOption(CV_OPTIONS::C_TABLE_MAX_ROWS, 8,'','no' );
+    }
+    /*
+    * uninstall plugin
+    */
+    public static function deIinstallDB(){
+        $intiDbClass = new CV_INITDB();
+        echo 'delete tables ';
+      
+        $intiDbClass->deleteEmployee();
+
+        $intiDbClass->deleteTestForEmployee();
+        
+        $intiDbClass->deleteDefaultOptions();
+    }
+
+    private function deleteEmployee(){
+        global $wpdb;
+        $sql =  'DROP TABLE '.$wpdb->prefix .'corona_employee;';
+        $wpdb->get_results($sql);        
+        $wpdb->get_results('commit;');
+
+    }
+    
+    private function deleteTestForEmployee(){
+        global $wpdb;
+        $sql =  'DROP TABLE '.$wpdb->prefix .'corona_test_to_employee;';
+        $wpdb->get_results($sql);        
+        $wpdb->get_results('commit;');
+
+    }
+
+    private function deleteDefaultOptions(){
+        global $wpdb;
+        $sql =  'DELETE FROM '.$wpdb->prefix .'options WHERE '.$wpdb->prefix .'option_name like "cv_%";';
+        $wpdb->get_results($sql);        
+        $wpdb->get_results('commit;');
+
     }
 }

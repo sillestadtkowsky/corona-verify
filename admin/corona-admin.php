@@ -55,6 +55,7 @@ echo "
               <th scope='row'>shortCode</th>
               <td>		
               <code>[corona-verify-form]</code>
+              <div class='option_info'>Erstellen Sie seine Seite und tragen Sie dort den oberhalb angezeigten Shortcode ein.</br>Ab sofort können Sie diese Seite aufrufen und bekommen die Verifizierungsseite angezeigt.</div>
 				      </td>
             </tr>
           </tbody>
@@ -145,7 +146,8 @@ function corona_admin_menu_CoronaEmployees() {
   global $wpdb;
   echo '<div class="wrap"><h2>Übersicht der registrierten Mitarbeiter</h2></div>';
   echo '<div class="wrap"><h3>Einen Mitarbeiter erfassen</h3></div>';
-  echo '<form method="POST">';
+  echo '<div class="option_info">Hier finden Sie Benutzer, welche Sie vorab <a href="users.php">hier</a> als Benutzer im Wordpress angelegt haben.</br>Es werden Benutzer mit der Berechtigung <i>Administrator</i> und <i>Abonnent</i> gefunden.</div>';
+  echo '<div class="tableContainer">';
   echo '<div class="divRow">';
   $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
   echo '<div class="divCell"><b>Mitarbeiter </b><select placeholder="Mitarbeiter" name="id" id="id">';
@@ -155,7 +157,8 @@ function corona_admin_menu_CoronaEmployees() {
   }
   echo '</select></div>';
   echo '<div class="divCell"><button type="submit" name="submit">speichern</button></div>';
-  echo '</form></div>'; 
+  echo '</form>'; 
+  echo '</div></div>'; 
 
   if(isset($_POST['submit'])){
     $id=$_POST['id'];
@@ -177,7 +180,6 @@ function corona_admin_menu_CoronaEmployees() {
 
   $myListTable = new EmployeeTable();
   echo '<div class="wrap"><h3>Registrierte Mitarbeiter</h3>';
-  
   $myListTable->prepare_items(); 
   $requestPage = $_REQUEST["page"];
   echo '<form id="events-filter" method="get"><input type="hidden" name="page" value="' .$requestPage. '" />';
