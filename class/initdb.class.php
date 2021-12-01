@@ -9,7 +9,7 @@ class CV_INITDB{
     public static function installDB(){
         $intiDbClass = new CV_INITDB();
         $options = new CV_OPTIONS();
-        global $jal_db_version;
+
         $installed_ver = $options->readOption(CV_OPTIONS::C_DB_VERSION);
 
         if ( $installed_ver === CV_INITDB::DB_VERSION ) {
@@ -34,7 +34,7 @@ class CV_INITDB{
                 testResult varchar(10) DEFAULT NULL,
                 symptom tinyint(1) DEFAULT NULL,
                 dateExpired datetime NOT NULL
-            )';
+            ) ENGINE=MyISAM DEFAULT CHARSET=latin1';
         $wpdb->get_results($sql);
         
         $primary =  'ALTER TABLE '.$wpdb->prefix .'corona_test_to_employee ADD PRIMARY KEY (id);';
@@ -54,7 +54,7 @@ class CV_INITDB{
                 persId int(11) DEFAULT NULL,
                 firstname varchar(150) DEFAULT NULL,
                 lastname varchar(150) DEFAULT NULL
-                )';
+                ) ENGINE=MyISAM DEFAULT CHARSET=latin1';
         $wpdb->get_results($sql);
 
         $primary =  'ALTER TABLE '.$wpdb->prefix .'corona_employee ADD PRIMARY KEY (id), ADD UNIQUE KEY persID (persId);';

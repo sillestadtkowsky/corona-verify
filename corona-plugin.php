@@ -32,7 +32,7 @@ require_once __DIR__ . '/class/initdb.class.php';
 */
 date_default_timezone_set('Europe/Berlin');
 
-register_activation_hook( __FILE__, CV_INITDB::installDB());
+register_activation_hook( __FILE__, array ( 'CV_INITDB', 'installDB') );
 
 /*
 * init Plugin Updater

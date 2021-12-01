@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../corona-plugin.php';
 class CV_UPDATER
 {
     public function update( $transient){
