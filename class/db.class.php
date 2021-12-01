@@ -161,6 +161,9 @@ class CV_DB
 		ORDER BY
 			test.id DESC';
 
+		$DEBUGMESSAGE = 'getLastTestForEmployee SQL: ' . $query.  '';
+		CV_UTILS::debugCode($DEBUGMESSAGE);
+
 		$result = $wpdb->get_results($query);
 		return $result;
 	}

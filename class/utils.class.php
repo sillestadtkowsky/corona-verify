@@ -1,6 +1,12 @@
 <?php
 class CV_UTILS
 {
+	public static function debugCode($message){
+		if (defined('WP_DEBUG') && true === WP_DEBUG) {
+			echo '<div class="debug">' .$message. '</div>';
+		}
+	}
+
 	public static function is_logged_in()
 	{
 		if (function_exists('is_user_logged_in')) {

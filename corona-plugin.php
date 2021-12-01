@@ -238,9 +238,12 @@ function corona_verify_shortcode($atts, $content = null, $tag = '')
   // call DB Data
   $result = CV_DB::getLastTestForEmployee($personId);
 
+  $DEBUGMESSAGE = 'personId: ' . $personId;
+  CV_UTILS::debugCode($DEBUGMESSAGE);
+
   echo '<div class="corona-verify-form">
       <div class="corna-verify-heading"><h1>' .$options->readOption(CV_OPTIONS::C_VERIFIZIERUNG_KENNZEICHEN). ' Verifizierung</h1>';
-  if ($wpdb->num_rows > 0) {
+    if (empty($result) != '1' ){
     $test_ergebnis = $result[0];
     if (CV_UTILS::isGueltig($test_ergebnis->expired) == 1) {
       echo '<div class="corna-verify-container-item">
