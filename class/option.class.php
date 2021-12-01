@@ -1,6 +1,7 @@
 <?php
 class CV_OPTIONS
 {
+	const C_DB_VERSION= 'cv_db_version';
 	const C_VERIFIZIERUNG_KENNZEICHEN = 'cv_verifizierungskennzeichen';
 	const C_VERIFIZIERUNG_STATUS = 'cv_verifizierungsstatus';
 	const C_QR_CODE = 'cv_qr';
@@ -19,11 +20,10 @@ class CV_OPTIONS
 	}
 
 	public function updateOrAddOption($option,$value,$deprecated,$autoload){
-		if(get_option( $option)===false){
+		if(get_option($option)===false){
 			CV_OPTIONS::addOption ($option,$value,$deprecated,$autoload);
 		}else{
 			update_option( $option, $value);
 		}
-		
 	}
 }
