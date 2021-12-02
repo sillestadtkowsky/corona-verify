@@ -225,7 +225,7 @@ function corona_verify_shortcode($atts, $content = null, $tag = '')
     $qr = $a['qr'];
   }
 
-  $ident = $_GET['ident'] ?? 'null';
+  $ident = esc_url($_GET['ident']) ?? 'null';
   if ($ident === 'null' || null == $ident) {
     $personId = get_current_user_id();
     $showQR = true;

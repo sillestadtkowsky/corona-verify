@@ -90,28 +90,10 @@ class TestViewTable extends WP_List_Table
 
   function usort_reorder($a, $b)
   {
-    $orderby = (!empty($_GET['orderby'])) ? $_GET['orderby'] : 'id';
-    $order = (!empty($_GET['order'])) ? $_GET['order'] : 'asc';
+    $orderby = (!empty($_GET['orderby'])) ? esc_sql($_GET['orderby']) : 'id';
+    $order = (!empty($_GET['order'])) ? esc_sql($_GET['order']) : 'asc';
     $testresult = strcmp($a[$orderby], $b[$orderby]);
     return ($order === 'desc') ? $testresult : -$testresult;
-  }
-
-  function column_name($item)
-  {
-    $delete_nonce = wp_create_nonce( 'delete_employee' );
-    $actions = array(
-      'delete'    => sprintf('<a href="?page=%s&action=%s&persId[]=%s&_wpnonce=%s">Löschen</a>', '' . $_REQUEST["page"] . '', 'delete', $item['id'],$delete_nonce),
-    );
-
-    return sprintf(
-      '%1$s <span style="color:silver ; display : none;">(persId:%2$s)</span>%3$s',
-      /*$1%s*/
-      $item['lastname'],
-      /*$2%s*/
-      $item['id'],
-      /*$3%s*/
-      $this->row_actions($actions)
-    );
   }
 
   function column_cb($item)
@@ -140,12 +122,11 @@ class TestViewTable extends WP_List_Table
         die( 'Go get a life script kiddies' );
       }
       else {
-      $delete_ids = $_GET['id'];
-            // loop over the array of record IDs and delete them
+      $delete_ids = esc_sql($_GET['id']);
       foreach ( $delete_ids as $id ) {
         echo ''. CV_DB::deleteTestsForEmployees( $id );
       }
-      wp_redirect( esc_url( add_query_arg() ) );
+      //wp_redirect( esc_url( add_query_arg() ) );
       exit;
     }
   }

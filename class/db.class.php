@@ -20,7 +20,7 @@ class CV_DB
 			employee.persId, tests.id DESC';
 
 		$result = $wpdb->get_results($query);
-		return $result;
+		return esc_sql($result);
 	}
 	
 	public static function getTestsForEmployeesArray()
@@ -42,7 +42,7 @@ class CV_DB
 			employee.persId, tests.id DESC';
 
 		$result = $wpdb->get_results($query,ARRAY_A);
-		return $result;
+		return esc_sql($result);
 	}
 
 	public static function deleteTestsForEmployees($id)
@@ -107,7 +107,7 @@ class CV_DB
 			employee.persId';
 
 		$result = $wpdb->get_results($query, ARRAY_A);
-		return $result;
+		return esc_sql($result);
 	}
 
 	public static function insertEmployee($id, $firstname, $lastname)
@@ -165,7 +165,7 @@ class CV_DB
 		CV_UTILS::debugCode($DEBUGMESSAGE);
 
 		$result = $wpdb->get_results($query);
-		return $result;
+		return esc_sql($result);
 	}
 
 	public static function getLastTestForEmployeeArray($personId)
@@ -190,6 +190,6 @@ class CV_DB
 			test.id DESC';
 
 		$result = $wpdb->get_results($query);
-		return $result;
+		return esc_sql($result);
 	}
 }

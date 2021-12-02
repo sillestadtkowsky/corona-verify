@@ -9,7 +9,7 @@ class CV_OPTIONS
 	const C_TABLE_MAX_ROWS = 'cv_max_rows';
 
 	public function addOption($option,$value,$deprecated,$autoload){
-		add_option( $option, $value, $deprecated, $autoload);
+		add_option( $option, sanitize_text_field($value), $deprecated, $autoload);
 	}
 
 	public function readOption($option){
@@ -17,14 +17,14 @@ class CV_OPTIONS
 	}
 
 	public function updateOption($option,$value){
-		update_option( $option, $value);
+		update_option($option, sanitize_text_field($value));
 	}
 
 	public function updateOrAddOption($option,$value,$deprecated,$autoload){
 		if(get_option($option)===false){
-			CV_OPTIONS::addOption ($option,$value,$deprecated,$autoload);
+			CV_OPTIONS::addOption ($option,sanitize_text_field($value),$deprecated,$autoload);
 		}else{
-			update_option( $option, $value);
+			update_option($option, sanitize_text_field($value));
 		}
 	}
 }

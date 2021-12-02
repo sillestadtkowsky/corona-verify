@@ -21,12 +21,12 @@ function corona_admin_menu()
 
 //Get the active tab from the $_GET param
 $default_tab = null;
-$tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
+$tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : $default_tab;
 $requestPage = $_REQUEST["page"];
 
 echo "
   <nav class='nav-tab-wrapper' style='margin-top:20px;'>";
-    echo "<a href='?page=" .$requestPage. "&tab=settings' class='nav-tab ";
+    echo "<a href='?page=" .esc_html($requestPage). "&tab=settings' class='nav-tab ";
     if($tab==='settings' || $tab==null){
       echo "nav-tab-active'>";
     }else{
@@ -34,7 +34,7 @@ echo "
     };
     echo "Einstellungen</a>";
 
-    echo "<a href='?page=" .$requestPage. "&tab=tools' class='nav-tab ";
+    echo "<a href='?page=" .esc_html($requestPage). "&tab=tools' class='nav-tab ";
     if($tab==='tools'){
       echo "nav-tab-active'>";
     }else{
@@ -69,21 +69,21 @@ echo "
             <tr class='cv_verifizierungskennzeichen'>
               <th scope='row'>Verifizierungskennzeichen</th>
               <td>		
-                <input type='text' id='cv_verifizierungskennzeichen' name='cv_verifizierungskennzeichen' value='" .$options->readOption('cv_verifizierungskennzeichen'). "' class='regular-text'> 
+                <input type='text' id='cv_verifizierungskennzeichen' name='cv_verifizierungskennzeichen' value='" .esc_html($options->readOption('cv_verifizierungskennzeichen')). "' class='regular-text'> 
                 <div class='option_info'>Wird im Kopf der Verifizierungsseite gezeigt.</div>
 				      </td>
             </tr>
             <tr class='cv_verifizierungsstatus'>
             <th scope='row'>Verifizierungsstatus</th>
             <td>		
-              <input type='text' id='cv_verifizierungsstatus' name='cv_verifizierungsstatus' value='" .$options->readOption('cv_verifizierungsstatus'). "' class='regular-text'> 
+              <input type='text' id='cv_verifizierungsstatus' name='cv_verifizierungsstatus' value='" .esc_html($options->readOption('cv_verifizierungsstatus')). "' class='regular-text'> 
               <div class='option_info'>Wird als Status unterhalb eines negativen Testergebnis auf der Verifizierungsseite gezeigt.</div>
             </td>
           </tr>
             <tr class='cv_max_rows'>
             <th scope='row'>Maximale Zeilenanzahl</th>
             <td>		
-              <input type='number' min='2' max='100' id='cv_max_rows' name='cv_max_rows' required value='" .$options->readOption('cv_max_rows'). "' class='regular-text'> 
+              <input type='number' min='2' max='100' id='cv_max_rows' name='cv_max_rows' required value='" .esc_html($options->readOption('cv_max_rows')). "' class='regular-text'> 
               <span class='validity'></span>
               <div class='option_info'>Legt fest, wie viele Zeilen in der Tabelle der Mitarbeiter und der Tabelle Mitarbeiter Tests angezeigt werden sollen.</div>
             </td>
@@ -169,7 +169,7 @@ function corona_admin_menu_CoronaEmployees() {
   echo '<div class="tableContainer">';
   echo '<form method="POST">';
   echo '<div class="divRow">';
-  $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
+  $blogusers = get_users( array( 'role__in' => array( 'administrator','subscriber' ) ) );
   echo '<div class="divCell"><b>Mitarbeiter </b><select placeholder="Mitarbeiter" name="id" id="id">';
   echo '<option value=""></option>';
   foreach ( $blogusers as $user ) {
@@ -221,14 +221,14 @@ function corona_admin_menu_CoronaTestOverview() {
   echo '<div class="divRow">';
   
   // lade Mitarbeiter Daten aus DB
-  $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
+  $blogusers = CV_DB::getEmployees();
   
   // zeige Mitarbeiter DropDown
   echo '<div class="divCell"><b>Mitarbeiter </b><select placeholder="Mitarbeiter" name="id" id="id">';
   echo '<option value=""></option>';
   
   foreach ( $blogusers as $user ) {
-    echo '<option value="' . esc_html( $user->ID ) . '">' . esc_html( $user->first_name ) . ' '. esc_html( $user->last_name ) . '</option>';
+    echo '<option value="' . esc_sql( $user->persId ) . '">' . esc_sql( $user->firstname ) . ' '. esc_sql( $user->lastname ) . '</option>';
   }
   
   echo '</select></div>';
