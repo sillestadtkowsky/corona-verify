@@ -1,6 +1,7 @@
 <?php
 class CV_OPTIONS
 {
+	const C_CLEAN_DB_BY_UNINSTALL= 'cv_clean_db_by_uninstall';
 	const C_DB_VERSION= 'cv_db_version';
 	const C_VERIFIZIERUNG_KENNZEICHEN = 'cv_verifizierungskennzeichen';
 	const C_VERIFIZIERUNG_STATUS = 'cv_verifizierungsstatus';

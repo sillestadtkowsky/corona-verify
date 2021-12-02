@@ -1,12 +1,13 @@
 <?php
 ob_start();
+
 /**
  *
- * Plugin Name:       Corona Test Verifyer
+ * Plugin Name:       Corona-Test-Verify
  * Plugin URI:        https://plugin.wp.osowsky-webdesign.de/
  * Description:       Dieses Plugin erlaubt jedem Mitarbeiter das digitale Vorzeigen eines gültigen 3G-Status, nach dem dieser zentral im Betrieb erfasst wurde. Für den Gegencheck wird zusätzlich ein QR-Code erzeugt, der eine zeitlich beschränkte Gültigkeit hat.
- * Version:           1.3.10
- * Requires at least: 5.2
+ * Version:           1.4.0
+ * Requires at least: 5.8.2
  * Requires PHP:      7.2
  * Author:            Silvio Osowsky
  * Author URI:        https://osowsky-webdesign.de
@@ -172,16 +173,18 @@ if (!function_exists('fa_custom_setup_cdn_webfont')) {
 * ###########################
 * Register Styles and Scripts
 */
-function wpdocs_register_plugin_styles()
+function wp_register_plugin_styles()
 {
   wp_register_style('corona-style', plugins_url('/css/front-style.css', __FILE__));
   wp_register_style('table-style', plugins_url('/css/table.css', __FILE__));
   wp_register_style('corona-style-fa', plugins_url('/css/fa/css/all.css', __FILE__));
+  
   wp_enqueue_style('corona-style-fa');
   wp_enqueue_style('corona-style');
   wp_enqueue_style('table-style');
 }
-add_action('wp_enqueue_scripts', 'wpdocs_register_plugin_styles');
+
+add_action('wp_enqueue_scripts', 'wp_register_plugin_styles');
 
 /*
 * ###############################
@@ -243,7 +246,7 @@ function corona_verify_shortcode($atts, $content = null, $tag = '')
 
   echo '<div class="corona-verify-form">
       <div class="corna-verify-heading"><h1>' .$options->readOption(CV_OPTIONS::C_VERIFIZIERUNG_KENNZEICHEN). ' Verifizierung</h1>';
-    if (empty($result) != '1' ){
+    if (empty($result) != '1'){
     $test_ergebnis = $result[0];
     if (CV_UTILS::isGueltig($test_ergebnis->expired) == 1) {
       echo '<div class="corna-verify-container-item">

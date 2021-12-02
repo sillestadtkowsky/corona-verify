@@ -3,8 +3,7 @@
 require_once __DIR__ . '/../class/employee.table.class.php';
 require_once __DIR__ . '/../class/testview.table.class.php';
 require_once __DIR__ . '/../class/option.class.php';
-
-
+require_once __DIR__ . '/../js/corona.js';
 
 /* 
 * ####################
@@ -108,6 +107,19 @@ echo "
                 <div class='option_info'>Legt fest, ob eine QR Code auf der Verifizierungsseite für einen Kunden angezeigt werden soll.</div>
               </td>
             </tr>
+            <tr class='cv_clean_db_by_uninstall'>
+              <th scope='row' style='color:red; font-weight:bold;'>Lösche Tabellen</th>
+              <td>
+                <input type='checkbox' id='cv_clean_db_by_uninstall' name='cv_clean_db_by_uninstall' value='yes'";
+                if ( 'yes' === $options->readOption('cv_clean_db_by_uninstall')){
+                  echo " checked='checked' >";
+                } else{
+                  echo " >";
+                }
+                echo "
+                <div class='option_info'><u>ACHTUNG!</u>  Legt fest, das bei einem Löschen des Plugin, die Tabellen ebenfalls entfernt werden. Dies kann <u>NICHT</u> rückgäng gemacht werden.</div>
+              </td>
+              </tr>
           </tbody>
         </table>";
       
@@ -120,7 +132,14 @@ echo "
         $vs=$_POST['cv_verifizierungsstatus'];
         $qr=$_POST['cv_qr'];
         $mr=$_POST['cv_max_rows'];
+        $dt=$_POST['cv_clean_db_by_uninstall'];
     
+        if($dt==='yes'){
+          echo '<script language="javascript">';
+          echo 'alert("Beim deinstallierten des "Corona-Verify" Plugins, werden die Tabellen mit Mitarbeitern und Tests gelöscht!)';
+          echo '</script>';
+        }
+        $options->updateOrAddOption('cv_clean_db_by_uninstall', $dt, '', '');
         $options->updateOrAddOption('cv_max_rows', $mr, '', '');
         $options->updateOrAddOption('cv_verifizierungskennzeichen', $vk, '', '');
         $options->updateOrAddOption('cv_verifizierungsstatus', $vs, '', '');

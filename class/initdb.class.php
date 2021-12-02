@@ -76,20 +76,20 @@ class CV_INITDB{
         $options->updateOrAddOption(CV_OPTIONS::C_VERIFIZIERUNG_KENNZEICHEN, '3G','','no' );
         $options->updateOrAddOption(CV_OPTIONS::C_VERIFIZIERUNG_STATUS, '3-G','','no' );
         $options->updateOrAddOption(CV_OPTIONS::C_QR_CODE, '','','no' );
+        $options->updateOrAddOption(CV_OPTIONS::C_CLEAN_DB_BY_UNINSTALL, '','','no' );
         $options->updateOrAddOption(CV_OPTIONS::C_TABLE_MAX_ROWS, 8,'','no' );
     }
     /*
     * uninstall plugin
     */
     public static function deInstallDB(){
-        $intiDbClass = new CV_INITDB();
-        echo 'delete tables ';
-      
-        $intiDbClass->deleteEmployee();
-
-        $intiDbClass->deleteTestForEmployee();
-        
-        $intiDbClass->deleteDefaultOptions();
+        $options = new CV_OPTIONS();
+        if ($options->readOption(CV_OPTIONS::C_CLEAN_DB_BY_UNINSTALL)==='yes') {
+            $intiDbClass = new CV_INITDB();     
+            $intiDbClass->deleteEmployee();
+            $intiDbClass->deleteTestForEmployee();
+            $intiDbClass->deleteDefaultOptions();
+        }
     }
 
     private function deleteEmployee(){
