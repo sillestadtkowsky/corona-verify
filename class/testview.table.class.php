@@ -136,16 +136,11 @@ class TestViewTable extends WP_List_Table
 
     //Detect when a bulk action is being triggered...
     if ( 'delete' === $this->current_action() ) {
-
-      // In our file that handles the request, verify the nonce.
-      $nonce = esc_attr( $_GET['_wpnonce'] );
-      echo ''. wp_verify_nonce( $nonce, 'delete_employee' );
-      //if ( ! wp_verify_nonce( $nonce, 'delete_employee' ) ) {
       if ( false ) {
         die( 'Go get a life script kiddies' );
       }
       else {
-      $delete_ids = esc_sql( $_GET['id'] );
+      $delete_ids = $_GET['id'];
             // loop over the array of record IDs and delete them
       foreach ( $delete_ids as $id ) {
         echo ''. CV_DB::deleteTestsForEmployees( $id );
