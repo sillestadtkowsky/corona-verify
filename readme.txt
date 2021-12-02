@@ -1,4 +1,13 @@
-# corona-verify
+=== Corona-Test-Verify ===
+Contributors: Silvio Osowsky
+Donate link: https://osowsky-webdesign.de
+Tags: corona, test, verify, employee, 
+Requires at least: 5.0
+Tested up to: 5.8.2
+Stable tag: 1.4.0
+Requires PHP: 7.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 ## Beschreibung
 Nach §28 gilt seit dem 24. November für alle Betriebe der so genannte 3G-Status. D. h. Mitarbeiter dürfen ihren Betrieb nur betreten, wenn diese über einen gültigen 3G-Status (geimpft, genesen oder getestet) verfügen. Auch wenn Mitarbeiter den jeweils Verantwortlichen gegenüber einen der drei Nachweise vorlegen müssen, sind Arbeitgeber gut beraten, gültige Datenschutzbestimmungen im Blick zu haben. Denn auch diese Daten unterliegen dem Datenschutz und dürfen nur insoweit erhoben und verarbeitet werden, wie dies auf Grund dieser Gesetzeslage notwendig ist. 
@@ -63,4 +72,3 @@ The prerequisite for using this plug-in is that the employees are created as use
 * With a valid negative test and the setting of the ShortCode property "QR" to the value "1", a QR code is displayed for the customer.
 * The QR code leads to a page with the current test result.
 * The information on this page is only displayed as long as the test is valid.
-
