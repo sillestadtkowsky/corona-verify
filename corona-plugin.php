@@ -52,7 +52,7 @@ function corona_test_verifyer_push_update( $transient){
     }
 
     $remote = wp_remote_get( 
-      'https://plugin.wp.osowsky-webdesign.de/info.json',
+      'https://plugins-wordpress-osowsky-webdesign.info/corona-verify/info.json',
       array(
         'timeout' => 10,
         'headers' => array(
@@ -107,7 +107,7 @@ add_filter( 'site_transient_update_plugins', 'corona_test_verifyer_push_update')
         
         // info.json is the file with the actual plugin information on your server
         $remote = wp_remote_get( 
-            'https://plugin.wp.osowsky-webdesign.de/info.json', 
+            'https://plugins-wordpress-osowsky-webdesign.info/corona-verify/info.json', 
             array(
                 'timeout' => 10,
                 'headers' => array(
