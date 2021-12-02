@@ -128,11 +128,11 @@ echo "
     
       // Speichern der Optionen
       if(isset($_POST['submit'])){
-        $vk=$_POST['cv_verifizierungskennzeichen'];
-        $vs=$_POST['cv_verifizierungsstatus'];
-        $qr=$_POST['cv_qr'];
-        $mr=$_POST['cv_max_rows'];
-        $dt=$_POST['cv_clean_db_by_uninstall'];
+        $vk= sanitize_text_field($_POST['cv_verifizierungskennzeichen']);
+        $vs=sanitize_text_field($_POST['cv_verifizierungsstatus']);
+        $qr=sanitize_text_field($_POST['cv_qr']);
+        $mr=sanitize_text_field($_POST['cv_max_rows']);
+        $dt=sanitize_text_field($_POST['cv_clean_db_by_uninstall']);
     
         if($dt==='yes'){
           echo '<script language="javascript">';
@@ -181,7 +181,7 @@ function corona_admin_menu_CoronaEmployees() {
   echo '</div></div>'; 
 
   if(isset($_POST['submit'])){
-    $id=$_POST['id'];
+    $id=sanitize_text_field($_POST['id']);
     $user = get_user_by('ID',$id);
 
     if($user){
@@ -251,10 +251,10 @@ function corona_admin_menu_CoronaTestOverview() {
   echo '</form></div>';  
   
     if(isset($_POST['submit'])){
-        $id=$_POST['id'];
-        $datum=$_POST['datum'];
-        $ergebnis=$_POST['ergebnis'];
-        $symptom=$_POST['symptom'];
+        $id=sanitize_text_field($_POST['id']);
+        $datum=sanitize_text_field($_POST['datum']);
+        $ergebnis=sanitize_text_field($_POST['ergebnis']);
+        $symptom=sanitize_text_field($_POST['symptom']);
         $expired = new DateTime($datum, new DateTimeZone("CET"));
         $expired = $expired->add(new DateInterval('PT25H'));
         $expired = $expired->format('Y-m-d H:i:s');
