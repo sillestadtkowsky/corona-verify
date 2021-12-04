@@ -192,7 +192,7 @@ class CV_DB
 		CV_UTILS::debugCode($DEBUGMESSAGE);
 
 		$result = $wpdb->get_results($query);
-		return esc_sql($result);
+		return $result;
 	}
 
 	public static function getLastTestForEmployeeArray($personId)
