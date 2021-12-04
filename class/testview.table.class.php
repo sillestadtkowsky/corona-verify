@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/db.class.php';
+require_once __DIR__ . '/excel.class.php';
 require_once __DIR__ . '/option.class.php';
 
 if (!class_exists('WP_List_Table')) {
@@ -105,47 +106,6 @@ class TestViewTable extends WP_List_Table
     );
   }
 
-  function download_csv_results($results, $link = NULL)
-  {
-    ob_clean();
-    ob_start();
-    $link = 'daten.csv' ;
-    
-    $fp = fopen($link,'w');
-    $first_row = array(
-        'Personen ID',
-        'Vorname',
-        'Nachname',
-        'Testergebnis',
-        'Test Datum',
-        'Test Zeit',
-        'Symptome',
-        'Gültig bis Tag',
-        'Gültig bis Zeit'
-    );
-    
-    fputcsv($fp, $first_row);
-    
-    foreach($results as $key=>$value)
-    {
-        $array_add = array(
-            $value['persId'], $value['firstname'],
-            $value['lastname'],$value['testresult'],$value['datum'],$value['zeit'],
-            $value['symptom'],$value['expiredDate'],$value['expiredTime']
-        );
-    
-        fputcsv($fp, $array_add);
-    
-    };
-    
-    fclose($fp);
-    
-    header('Content-Type: application/csv');
-    header('Content-Disposition: attachment; filename="Corona-Verify-Test.csv"');
-    
-    readfile($link);
-    unlink($link);
-  }
 
   function get_bulk_actions()
   {
@@ -165,24 +125,13 @@ class TestViewTable extends WP_List_Table
       foreach ( $delete_ids as $id ) {
         echo ''. CV_DB::deleteTestsForEmployees( $id );
       }
-      //wp_redirect( esc_url( add_query_arg() ) );
+      wp_redirect( esc_url( add_query_arg() ) );
       exit;
     }
 
-    if ( 'export' === $this->current_action() ) {
-      $results = CV_DB::getTestsForEmployeesArray();
-      $rows = array (
-        'persId',
-        'firstname',
-        'lastname',
-        'id',
-        'datum',
-        'zeit',
-        'testresult',
-        'perssymptomId'
-      );
-      
-      $this->download_csv_results($results, "sille");
+    if ( 'export' === $this->current_action() ) {    
+      $export_ids = esc_sql($_GET['id']); 
+      CV_EXCEL::downloadTestVerifizierungen($export_ids, "sille");
       exit;
     }
   }

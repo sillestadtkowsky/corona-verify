@@ -45,6 +45,33 @@ class CV_DB
 		return esc_sql($result);
 	}
 
+	public static function getTestsForEmployeesByIdArray($testId)
+	{
+		global $wpdb;
+
+		$searchStringVar = implode(",",$testId);
+
+		$query = '';
+
+		$query .=
+			'SELECT employee.persId, employee.firstname as firstname, employee.lastname as lastname,
+		tests.id as id, tests.persId as persId, DATE_FORMAT(tests.dateTime, "%d.%m.%Y") as datum , 
+		DATE_FORMAT(tests.dateTime, "%H:%i")  as zeit, tests.testresult as testresult, 
+		tests.symptom as symptom , 
+		DATE_FORMAT(tests.dateExpired, "%d.%m.%Y") as expiredDate, DATE_FORMAT(tests.dateExpired, "%H:%i") as expiredTime 
+		FROM 
+			' . $wpdb->prefix . 'corona_employee as employee
+		RIGHT JOIN 
+			' . $wpdb->prefix . 'corona_test_to_employee as tests ON employee.persId = tests.persId
+		WHERE
+			tests.id in (' .$searchStringVar. ')
+		ORDER BY
+			employee.persId, tests.id DESC';
+
+		$result = $wpdb->get_results($query,ARRAY_A);
+		return esc_sql($result);
+	}
+
 	public static function deleteTestsForEmployees($id)
 	{
 		global $wpdb;

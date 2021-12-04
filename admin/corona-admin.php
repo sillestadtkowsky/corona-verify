@@ -139,6 +139,7 @@ echo "
           echo 'alert("Beim deinstallierten des "Corona-Verify" Plugins, werden die Tabellen mit Mitarbeitern und Tests gelöscht!)';
           echo '</script>';
         }
+        
         $options->updateOrAddOption('cv_clean_db_by_uninstall', $dt, '', '');
         $options->updateOrAddOption('cv_max_rows', $mr, '', '');
         $options->updateOrAddOption('cv_verifizierungskennzeichen', $vk, '', '');
@@ -274,8 +275,5 @@ function corona_admin_menu_CoronaTestOverview() {
     $myListTable->display(); 
     echo '</form>';
     echo '</div></div>'; 
-
-    echo 'timezone_string '. get_option("timezone_string");
-    echo 'gmt_offset '. get_option("gmt_offset");
 }
 

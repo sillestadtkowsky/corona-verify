@@ -4,15 +4,15 @@ ob_start();
 /**
  *
  * Plugin Name:       Corona-Test-Verify
- * Plugin URI:        https://plugin.wp.osowsky-webdesign.de/
+ * Plugin URI:        https://plugins-wordpress-osowsky-webdesign.info
  * Description:       Dieses Plugin erlaubt jedem Mitarbeiter das digitale Vorzeigen eines gültigen 3G-Status, nach dem dieser zentral im Betrieb erfasst wurde. Für den Gegencheck wird zusätzlich ein QR-Code erzeugt, der eine zeitlich beschränkte Gültigkeit hat.
- * Version:           1.5.0
+ * Version:           1.5.1
  * Requires at least: 5.8.2
  * Requires PHP:      7.2
  * Author:            Silvio Osowsky
  * Author URI:        https://osowsky-webdesign.de
- * License:           GPL v2 or later
- * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       osowsky-design-plugin
  */
 
