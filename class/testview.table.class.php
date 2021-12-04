@@ -105,10 +105,53 @@ class TestViewTable extends WP_List_Table
     );
   }
 
+  function download_csv_results($results, $link = NULL)
+  {
+    ob_clean();
+    ob_start();
+    $link = 'daten.csv' ;
+    
+    $fp = fopen($link,'w');
+    $first_row = array(
+        'Personen ID',
+        'Vorname',
+        'Nachname',
+        'Testergebnis',
+        'Test Datum',
+        'Test Zeit',
+        'Symptome',
+        'Gültig bis Tag',
+        'Gültig bis Zeit'
+    );
+    
+    fputcsv($fp, $first_row);
+    
+    foreach($results as $key=>$value)
+    {
+        $array_add = array(
+            $value['persId'], $value['firstname'],
+            $value['lastname'],$value['testresult'],$value['datum'],$value['zeit'],
+            $value['symptom'],$value['expiredDate'],$value['expiredTime']
+        );
+    
+        fputcsv($fp, $array_add);
+    
+    };
+    
+    fclose($fp);
+    
+    header('Content-Type: application/csv');
+    header('Content-Disposition: attachment; filename="Corona-Verify-Test.csv"');
+    
+    readfile($link);
+    unlink($link);
+  }
+
   function get_bulk_actions()
   {
     $actions = array(
-      'delete'    => 'Löschen'
+      'delete'    => 'Löschen',
+      'export'    => 'Export'
     );
     return $actions;
   }
@@ -118,10 +161,6 @@ class TestViewTable extends WP_List_Table
 
     //Detect when a bulk action is being triggered...
     if ( 'delete' === $this->current_action() ) {
-      if ( false ) {
-        die( 'Go get a life script kiddies' );
-      }
-      else {
       $delete_ids = esc_sql($_GET['id']);
       foreach ( $delete_ids as $id ) {
         echo ''. CV_DB::deleteTestsForEmployees( $id );
@@ -129,6 +168,22 @@ class TestViewTable extends WP_List_Table
       //wp_redirect( esc_url( add_query_arg() ) );
       exit;
     }
-  }
+
+    if ( 'export' === $this->current_action() ) {
+      $results = CV_DB::getTestsForEmployeesArray();
+      $rows = array (
+        'persId',
+        'firstname',
+        'lastname',
+        'id',
+        'datum',
+        'zeit',
+        'testresult',
+        'perssymptomId'
+      );
+      
+      $this->download_csv_results($results, "sille");
+      exit;
+    }
   }
 }

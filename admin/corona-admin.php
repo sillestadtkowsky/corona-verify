@@ -234,7 +234,7 @@ function corona_admin_menu_CoronaTestOverview() {
   echo '</select></div>';
 
   // Testzeitpunkt
-  echo '<div class="divCell"><b>Datum </b><input class="input-text" type="datetime-local"" name="datum" placeholder="Datum"/></div>';
+  echo '<div class="divCell"><b>Datum </b><input class="input-text" type="datetime-local" name="datum" placeholder="Datum"/></div>';
   
   // zeige Testergebnis DropDown
   echo '<div class="divCell"><b>Testergebnis </b><select placeholder="Testergebnis" name="ergebnis" id="ergebnis">';
@@ -255,25 +255,27 @@ function corona_admin_menu_CoronaTestOverview() {
         $datum=sanitize_text_field($_POST['datum']);
         $ergebnis=sanitize_text_field($_POST['ergebnis']);
         $symptom=sanitize_text_field($_POST['symptom']);
-        $expired = new DateTime($datum, new DateTimeZone("CET"));
-        $expired = $expired->add(new DateInterval('PT25H'));
+        $expired = new DateTime($datum);
+        $expired = $expired->add(new DateInterval('PT24H'));
         $expired = $expired->format('Y-m-d H:i:s');
         $dateFormat = date('Y-m-d\TH:i:s.uP');
-        $timestamp = date('Y-m-d H:i:s');
-  
+        $timestamp = new DateTime($datum);
+        $timestamp = $timestamp->format('Y-m-d H:i:s');
         echo ''. CV_DB::insertTestForEmployee($id, $timestamp, $ergebnis, $symptom, $expired); 
         echo '</div></div>';  
 
     }
     
     $myListTable = new TestViewTable();
-    echo '<div class="wrap"><h3>Registrierte Mitarbeiter</h3>';
-    
+    echo '<div class="wrap"><h3>Übersicht der verifizierten Tests</h3>';
     $myListTable->prepare_items(); 
     $requestPage = $_REQUEST["page"];
     echo '<form id="events-filter" method="get"><input type="hidden" name="page" value="' .$requestPage. '" />';
     $myListTable->display(); 
     echo '</form>';
     echo '</div></div>'; 
+
+    echo 'timezone_string '. get_option("timezone_string");
+    echo 'gmt_offset '. get_option("gmt_offset");
 }
 
