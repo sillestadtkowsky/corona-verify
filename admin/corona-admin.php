@@ -21,12 +21,12 @@ function corona_admin_menu()
 
 //Get the active tab from the $_GET param
 $default_tab = null;
-$tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
+$tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : $default_tab;
 $requestPage = $_REQUEST["page"];
 
 echo "
   <nav class='nav-tab-wrapper' style='margin-top:20px;'>";
-    echo "<a href='?page=" .$requestPage. "&tab=settings' class='nav-tab ";
+    echo "<a href='?page=" .esc_html($requestPage). "&tab=settings' class='nav-tab ";
     if($tab==='settings' || $tab==null){
       echo "nav-tab-active'>";
     }else{
@@ -34,7 +34,7 @@ echo "
     };
     echo "Einstellungen</a>";
 
-    echo "<a href='?page=" .$requestPage. "&tab=tools' class='nav-tab ";
+    echo "<a href='?page=" .esc_html($requestPage). "&tab=tools' class='nav-tab ";
     if($tab==='tools'){
       echo "nav-tab-active'>";
     }else{
@@ -69,21 +69,21 @@ echo "
             <tr class='cv_verifizierungskennzeichen'>
               <th scope='row'>Verifizierungskennzeichen</th>
               <td>		
-                <input type='text' id='cv_verifizierungskennzeichen' name='cv_verifizierungskennzeichen' value='" .$options->readOption('cv_verifizierungskennzeichen'). "' class='regular-text'> 
+                <input type='text' id='cv_verifizierungskennzeichen' name='cv_verifizierungskennzeichen' value='" .esc_html($options->readOption('cv_verifizierungskennzeichen')). "' class='regular-text'> 
                 <div class='option_info'>Wird im Kopf der Verifizierungsseite gezeigt.</div>
 				      </td>
             </tr>
             <tr class='cv_verifizierungsstatus'>
             <th scope='row'>Verifizierungsstatus</th>
             <td>		
-              <input type='text' id='cv_verifizierungsstatus' name='cv_verifizierungsstatus' value='" .$options->readOption('cv_verifizierungsstatus'). "' class='regular-text'> 
+              <input type='text' id='cv_verifizierungsstatus' name='cv_verifizierungsstatus' value='" .esc_html($options->readOption('cv_verifizierungsstatus')). "' class='regular-text'> 
               <div class='option_info'>Wird als Status unterhalb eines negativen Testergebnis auf der Verifizierungsseite gezeigt.</div>
             </td>
           </tr>
             <tr class='cv_max_rows'>
             <th scope='row'>Maximale Zeilenanzahl</th>
             <td>		
-              <input type='number' min='2' max='100' id='cv_max_rows' name='cv_max_rows' required value='" .$options->readOption('cv_max_rows'). "' class='regular-text'> 
+              <input type='number' min='2' max='100' id='cv_max_rows' name='cv_max_rows' required value='" .esc_html($options->readOption('cv_max_rows')). "' class='regular-text'> 
               <span class='validity'></span>
               <div class='option_info'>Legt fest, wie viele Zeilen in der Tabelle der Mitarbeiter und der Tabelle Mitarbeiter Tests angezeigt werden sollen.</div>
             </td>
@@ -128,17 +128,18 @@ echo "
     
       // Speichern der Optionen
       if(isset($_POST['submit'])){
-        $vk=$_POST['cv_verifizierungskennzeichen'];
-        $vs=$_POST['cv_verifizierungsstatus'];
-        $qr=$_POST['cv_qr'];
-        $mr=$_POST['cv_max_rows'];
-        $dt=$_POST['cv_clean_db_by_uninstall'];
+        $vk= sanitize_text_field($_POST['cv_verifizierungskennzeichen']);
+        $vs=sanitize_text_field($_POST['cv_verifizierungsstatus']);
+        $qr=sanitize_text_field($_POST['cv_qr']);
+        $mr=sanitize_text_field($_POST['cv_max_rows']);
+        $dt=sanitize_text_field($_POST['cv_clean_db_by_uninstall']);
     
         if($dt==='yes'){
           echo '<script language="javascript">';
           echo 'alert("Beim deinstallierten des "Corona-Verify" Plugins, werden die Tabellen mit Mitarbeitern und Tests gelöscht!)';
           echo '</script>';
         }
+        
         $options->updateOrAddOption('cv_clean_db_by_uninstall', $dt, '', '');
         $options->updateOrAddOption('cv_max_rows', $mr, '', '');
         $options->updateOrAddOption('cv_verifizierungskennzeichen', $vk, '', '');
@@ -169,7 +170,7 @@ function corona_admin_menu_CoronaEmployees() {
   echo '<div class="tableContainer">';
   echo '<form method="POST">';
   echo '<div class="divRow">';
-  $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
+  $blogusers = get_users( array( 'role__in' => array( 'administrator','subscriber' ) ) );
   echo '<div class="divCell"><b>Mitarbeiter </b><select placeholder="Mitarbeiter" name="id" id="id">';
   echo '<option value=""></option>';
   foreach ( $blogusers as $user ) {
@@ -181,7 +182,7 @@ function corona_admin_menu_CoronaEmployees() {
   echo '</div></div>'; 
 
   if(isset($_POST['submit'])){
-    $id=$_POST['id'];
+    $id=sanitize_text_field($_POST['id']);
     $user = get_user_by('ID',$id);
 
     if($user){
@@ -221,20 +222,20 @@ function corona_admin_menu_CoronaTestOverview() {
   echo '<div class="divRow">';
   
   // lade Mitarbeiter Daten aus DB
-  $blogusers = get_users( array( 'role__in' => array( 'Administrator','subscriber' ) ) );
+  $blogusers = CV_DB::getEmployees();
   
   // zeige Mitarbeiter DropDown
   echo '<div class="divCell"><b>Mitarbeiter </b><select placeholder="Mitarbeiter" name="id" id="id">';
   echo '<option value=""></option>';
   
   foreach ( $blogusers as $user ) {
-    echo '<option value="' . esc_html( $user->ID ) . '">' . esc_html( $user->first_name ) . ' '. esc_html( $user->last_name ) . '</option>';
+    echo '<option value="' . esc_sql( $user->persId ) . '">' . esc_sql( $user->firstname ) . ' '. esc_sql( $user->lastname ) . '</option>';
   }
   
   echo '</select></div>';
 
   // Testzeitpunkt
-  echo '<div class="divCell"><b>Datum </b><input class="input-text" type="datetime-local"" name="datum" placeholder="Datum"/></div>';
+  echo '<div class="divCell"><b>Datum </b><input class="input-text" type="datetime-local" name="datum" placeholder="Datum"/></div>';
   
   // zeige Testergebnis DropDown
   echo '<div class="divCell"><b>Testergebnis </b><select placeholder="Testergebnis" name="ergebnis" id="ergebnis">';
@@ -251,24 +252,23 @@ function corona_admin_menu_CoronaTestOverview() {
   echo '</form></div>';  
   
     if(isset($_POST['submit'])){
-        $id=$_POST['id'];
-        $datum=$_POST['datum'];
-        $ergebnis=$_POST['ergebnis'];
-        $symptom=$_POST['symptom'];
-        $expired = new DateTime($datum, new DateTimeZone("CET"));
-        $expired = $expired->add(new DateInterval('PT25H'));
+        $id=sanitize_text_field($_POST['id']);
+        $datum=sanitize_text_field($_POST['datum']);
+        $ergebnis=sanitize_text_field($_POST['ergebnis']);
+        $symptom=sanitize_text_field($_POST['symptom']);
+        $expired = new DateTime($datum);
+        $expired = $expired->add(new DateInterval('PT24H'));
         $expired = $expired->format('Y-m-d H:i:s');
         $dateFormat = date('Y-m-d\TH:i:s.uP');
-        $timestamp = date('Y-m-d H:i:s');
-  
+        $timestamp = new DateTime($datum);
+        $timestamp = $timestamp->format('Y-m-d H:i:s');
         echo ''. CV_DB::insertTestForEmployee($id, $timestamp, $ergebnis, $symptom, $expired); 
         echo '</div></div>';  
 
     }
     
     $myListTable = new TestViewTable();
-    echo '<div class="wrap"><h3>Registrierte Mitarbeiter</h3>';
-    
+    echo '<div class="wrap"><h3>Übersicht der verifizierten Tests</h3>';
     $myListTable->prepare_items(); 
     $requestPage = $_REQUEST["page"];
     echo '<form id="events-filter" method="get"><input type="hidden" name="page" value="' .$requestPage. '" />';

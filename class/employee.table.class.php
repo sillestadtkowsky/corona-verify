@@ -80,8 +80,8 @@ class EmployeeTable extends WP_List_Table
 
   function usort_reorder($a, $b)
   {
-    $orderby = (!empty($_GET['orderby'])) ? $_GET['orderby'] : 'lastname';
-    $order = (!empty($_GET['order'])) ? $_GET['order'] : 'asc';
+    $orderby = (!empty($_GET['orderby'])) ? esc_sql($_GET['orderby']) : 'lastname';
+    $order = (!empty($_GET['order'])) ? esc_sql($_GET['order']) : 'asc';
     $testresult = strcmp($a[$orderby], $b[$orderby]);
     return ($order === 'desc') ? $testresult : -$testresult;
   }
@@ -90,17 +90,17 @@ class EmployeeTable extends WP_List_Table
   {
     $delete_nonce = wp_create_nonce( 'delete_employee' );
     $actions = array(
-      'delete'    => sprintf('<a href="?page=%s&action=%s&persId[]=%s&_wpnonce=%s">Lsssöschen</a>', '' . $_REQUEST["page"] . '', 'delete', $item['persId'],$delete_nonce),
+      'delete'    => sprintf('<a href="?page=%s&action=%s&persId[]=%s&_wpnonce=%s">Lsssöschen</a>', '' . esc_url($_REQUEST["page"]) . '', 'delete', esc_html($item['persId']),sanitize_text_field($delete_nonce)),
     );
 
     return sprintf(
       '%1$s <span style="color:silver ; display : none;">(persId:%2$s)</span>%3$s',
       /*$1%s*/
-      $item['lastname'],
+      sanitize_text_field($item['lastname']),
       /*$2%s*/
-      $item['persId'],
+      sanitize_text_field($item['persId']),
       /*$3%s*/
-      $this->row_actions($actions)
+      $this->row_actions(sanitize_text_field($actions))
     );
   }
 
@@ -109,7 +109,7 @@ class EmployeeTable extends WP_List_Table
     return sprintf(
       '<input type="checkbox" name="%1$s[]" value="%2$s" />',
       'persId',  //Let's simply repurpose the table's singular label ("plugin")
-      $item['persId']                //The value of the checkbox should be the record's id
+      sanitize_text_field($item['persId'])                //The value of the checkbox should be the record's id
     );
   }
   
@@ -126,11 +126,6 @@ class EmployeeTable extends WP_List_Table
 
     //Detect when a bulk action is being triggered...
   if ( 'delete' === $this->current_action() ) {
-
-      // In our file that handles the request, verify the nonce.
-      $nonce = esc_attr( $_GET['_wpnonce'] );
-      echo ''. wp_verify_nonce( $nonce, 'delete_employee' );
-      //if ( ! wp_verify_nonce( $nonce, 'delete_employee' ) ) {
       if ( false ) {
         die( 'Go get a life script kiddies' );
       }
