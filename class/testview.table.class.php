@@ -1,7 +1,4 @@
 <?php
-require_once __DIR__ . '/db.class.php';
-require_once __DIR__ . '/excel.class.php';
-require_once __DIR__ . '/option.class.php';
 
 if (!class_exists('WP_List_Table')) {
   require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
@@ -91,8 +88,8 @@ class TestViewTable extends WP_List_Table
 
   function usort_reorder($a, $b)
   {
-    $orderby = (!empty($_GET['orderby'])) ? esc_sql($_GET['orderby']) : 'id';
-    $order = (!empty($_GET['order'])) ? esc_sql($_GET['order']) : 'asc';
+    $orderby = (!empty($_GET['orderby'])) ? sanitize_text_field($_GET['orderby']) : 'id';
+    $order = (!empty($_GET['order'])) ? sanitize_text_field($_GET['order']) : 'asc';
     $testresult = strcmp($a[$orderby], $b[$orderby]);
     return ($order === 'desc') ? $testresult : -$testresult;
   }
@@ -119,17 +116,18 @@ class TestViewTable extends WP_List_Table
 
     //Detect when a bulk action is being triggered...
     if ( 'delete' === $this->current_action() ) {
-      $delete_ids = esc_sql($_GET['id']);
+      
+      $delete_ids = $_GET['id'];
       foreach ( $delete_ids as $id ) {
-        CV_DB::deleteTestsForEmployees( $id );
+        CV_DB::deleteTestsForEmployees( sanitize_text_field($id) );
       }
       wp_redirect( esc_url( add_query_arg() ) );
       exit;
     }
 
     if ( 'export' === $this->current_action() ) {    
-      $export_ids = esc_sql($_GET['id']); 
-      CV_EXCEL::downloadTestVerifizierungen($export_ids, "sille");
+      $export_ids = $_GET['id']; 
+      CV_EXCEL::downloadTestVerifizierungen($export_ids, "Corona-Verifizierung-Tests");
       exit;
     }
   }

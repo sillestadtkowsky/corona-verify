@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../class/option.class.php';
-
 class CV_INITDB{
     
     Const DB_VERSION = '1.0.0';
@@ -67,18 +65,19 @@ class CV_INITDB{
 
     private function setDefaultOptions(){
         $options = new CV_OPTIONS();
-        $options->updateOrAddOption(CV_OPTIONS::C_DB_VERSION, CV_INITDB::DB_VERSION,'','no');
-        $options->updateOrAddOption(CV_OPTIONS::C_VERIFIZIERUNG_KENNZEICHEN, '3G','','no' );
-        $options->updateOrAddOption(CV_OPTIONS::C_VERIFIZIERUNG_STATUS, '3-G','','no' );
+        $options->updateOrAddOption(CV_OPTIONS::C_DB_VERSION, esc_html(CV_INITDB::DB_VERSION),'','no');
+        $options->updateOrAddOption(CV_OPTIONS::C_VERIFIZIERUNG_KENNZEICHEN, esc_html('3G'),'','no' );
+        $options->updateOrAddOption(CV_OPTIONS::C_VERIFIZIERUNG_STATUS, esc_html('3-G'),'','no' );
         $options->updateOrAddOption(CV_OPTIONS::C_QR_CODE, '','','no' );
         $options->updateOrAddOption(CV_OPTIONS::C_CLEAN_DB_BY_UNINSTALL, '','','no' );
-        $options->updateOrAddOption(CV_OPTIONS::C_TABLE_MAX_ROWS, 8,'','no' );
+        $options->updateOrAddOption(CV_OPTIONS::C_TABLE_MAX_ROWS, esc_html(8),'','no' );
     }
     /*
     * uninstall plugin
     */
     public static function deInstallDB(){
         $options = new CV_OPTIONS();
+        echo 'deInstallDB' . $options->readOption(CV_OPTIONS::C_CLEAN_DB_BY_UNINSTALL);
         if ($options->readOption(CV_OPTIONS::C_CLEAN_DB_BY_UNINSTALL)==='yes') {
             $intiDbClass = new CV_INITDB();     
             $intiDbClass->deleteEmployee();

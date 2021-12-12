@@ -50,8 +50,8 @@ function corona_admin_menu_CoronaEmployees() {
     $myListTable = new EmployeeTable();
     $html .= '<div class="wrap"><h3>Registrierte Mitarbeiter</h3>';
     $myListTable->prepare_items(); 
-    $requestPage = $_REQUEST["page"];
-    $html .= '<form id="events-filter" method="get"><input type="hidden" name="page" value="' .$requestPage. '" />';
+    $requestPage = sanitize_text_field($_REQUEST["page"]);
+    $html .= '<form id="events-filter" method="get"><input type="hidden" name="page" value="' . sanitize_text_field($requestPage) . '" />';
     
     echo $html;
     

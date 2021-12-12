@@ -21,7 +21,9 @@ add_action('admin_menu', 'corona_menu_creator');
 function corona_admin_home()
 {
   $html = '';
-  $html .= '<div class="wrap"><h1>Willkommen im Corona Verify Admin Dashboard</h2></div>';
+  $html .= '<div class="wrap">';
+  $html .= '<h1>Willkommen im Corona Verify Admin Dashboard</h1>';
+  $html .= '</div>';
   $options = new CV_OPTIONS();
 
   // check user capabilities
@@ -32,10 +34,10 @@ function corona_admin_home()
 //Get the active tab from the $_GET param
 $default_tab = null;
 $tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : $default_tab;
-$requestPage = $_REQUEST["page"];
+$requestPage = sanitize_text_field($_REQUEST["page"]);
 
 $html .= '<nav class="nav-tab-wrapper" style="margin-top:20px;">
-            <a href="?page=' .$requestPage. '&tab=settings" class="nav-tab ';
+            <a href="?page=' . sanitize_text_field( $requestPage ) . '&tab=settings" class="nav-tab ';
             if($tab==="settings" || $tab==null){
               $html .= 'nav-tab-active">';
             }else{
@@ -43,7 +45,7 @@ $html .= '<nav class="nav-tab-wrapper" style="margin-top:20px;">
             }
             $html .= 'Einstellungen</a>
               
-            <a href="?page=' .$requestPage. '&tab=tools" class="nav-tab ';
+            <a href="?page='. sanitize_text_field( $requestPage ) .'&tab=tools" class="nav-tab ';
             if($tab==="tools"){
               $html .= 'nav-tab-active">';
             }else{

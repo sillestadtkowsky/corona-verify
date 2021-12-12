@@ -69,8 +69,8 @@ function corona_admin_menu_CoronaTestOverview() {
       $myListTable = new TestViewTable();
       $html .='<div class="wrap"><h3>Übersicht der verifizierten Tests</h3>';
       $myListTable->prepare_items(); 
-      $requestPage = $_REQUEST["page"];
-      $html .='<form id="events-filter" method="get"><input type="hidden" name="page" value="' .$requestPage. '" />';
+      $requestPage = sanitize_text_field($_REQUEST["page"]);
+      $html .='<form id="events-filter" method="get"><input type="hidden" name="page" value="' . sanitize_text_field($requestPage) . '" />';
       
       echo $html;
       

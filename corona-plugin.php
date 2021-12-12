@@ -29,6 +29,7 @@ define( 'CORONA_TEST_VERIFY_PLUGIN_PLUGIN_PATH', plugin_dir_url( __FILE__ ) );
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/inc/wp-enqueue.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/main/shortcode.php';
 
+require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/excel.class.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/updater.class.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/db.class.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/utils.class.php';
@@ -36,7 +37,6 @@ require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/secure.class.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/qr.class.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/option.class.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/initdb.class.php';
-require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/option.class.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/employee.table.class.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/testview.table.class.php';
 
@@ -45,3 +45,9 @@ require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/admin/menus/tools.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/admin/menus/options.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/admin/menus/employee.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/admin/menus/corona-test.php';
+
+/**
+ * Plugin Uninstall DB
+ */
+register_activation_hook( __FILE__, array ( 'CV_INITDB', 'installDB') );
+register_deactivation_hook( __FILE__, array ( 'CV_INITDB', 'deInstallDB') );

@@ -1,5 +1,5 @@
 <?php
-	require_once('secure.class.php');
+
 	class CV_QR
 	{
 		public static function getCode($persId, $testId)

@@ -1,7 +1,5 @@
 <?php
 
-    require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/option.class.php';
-
     function viewAdminOptions(){
         $options = new CV_OPTIONS();
         $html = '';

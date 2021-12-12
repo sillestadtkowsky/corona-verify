@@ -60,7 +60,8 @@ function corona_verify_shortcode($atts, $content = null, $tag = '')
                                     $html .= '<b>Unser Mitarbeiter hat <u>KEINEN</u> gültigen ' .$options->readOption(CV_OPTIONS::C_VERIFIZIERUNG_STATUS). ' Status</b>';
                                   } else {
                                     $html .= '<div class="negativ">';
-                                    $html .= '<div class="greenBackground"><div class="aktuellesDatum">' . $DateAndTime = date('d.m.Y H:i', time()) . ' Uhr</div> <b>' .$options->readOption(CV_OPTIONS::C_VERIFIZIERUNG_STATUS). ' Status gültig</b></div>';
+                                    $nowDateTime = new DateTime();
+                                    $html .= '<div class="greenBackground"><div class="aktuellesDatum">' . $nowDateTime->format('d.m.Y H:i') . ' Uhr</div> <b>' .$options->readOption(CV_OPTIONS::C_VERIFIZIERUNG_STATUS). ' Status gültig</b></div>';
                                       if ($options->readOption(CV_OPTIONS::C_QR_CODE)==='yes') {
                                         if($showQR){
                                           $personId = get_query_var('persId', -1);

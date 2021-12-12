@@ -1,15 +1,11 @@
 <?php
-
-    require_once __DIR__ . '/db.class.php';
-    require_once __DIR__ . '/option.class.php';
-
+    
     class CV_EXCEL {
 
         static function downloadTestVerifizierungen($testIds, $link = NULL)
         {
           ob_clean();
           ob_start();
-          $link = 'daten.csv' ;
           
           $fp = fopen($link,'w');
           $first_row = array(
@@ -26,7 +22,7 @@
           
           fputcsv($fp, $first_row);
           
-          $results = CV_DB::getTestsForEmployeesByIdArray($testIds);
+          $results = CV_DB::getTestsForEmployeesByIdArray(CV_UTILS::recursive_sanitize_text_field($testIds));
 
           foreach($results as $key=>$value)
           {
@@ -43,7 +39,7 @@
           fclose($fp);
           
           header('Content-Type: application/csv');
-          header('Content-Disposition: attachment; filename="Corona-Verify-Test.csv"');
+          header('Content-Disposition: attachment; filename="' . $link . '.csv"');
           
           readfile($link);
           unlink($link);

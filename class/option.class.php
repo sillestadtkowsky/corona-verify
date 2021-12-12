@@ -1,5 +1,7 @@
 <?php
+
 class CV_OPTIONS
+
 {
 	const C_SETTINGS_UPDATE_TIME= 'cv_settings_update_time';
 	const C_CLEAN_DB_BY_UNINSTALL= 'cv_clean_db_by_uninstall';
@@ -14,7 +16,7 @@ class CV_OPTIONS
 	}
 
 	public function readOption($option){
-		return get_option( $option, true );
+		return sanitize_text_field(get_option( $option, true ));
 	}
 
 	public function updateOption($option,$value){

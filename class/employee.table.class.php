@@ -30,7 +30,7 @@ class EmployeeTable extends WP_List_Table
       'lastname'
     );
 
-    $search = ( isset( $_REQUEST['s'] ) ) ? $_REQUEST['s'] : false;
+    $search = ( isset($_REQUEST['s']) ) ? sanitize_text_field($_REQUEST['s']) : false;
     $do_search = ( $search ) ? $wpdb->prepare(" post_content LIKE '%%%s%%' ", $search ) : '';
 
     $data = CV_DB::getEmployeesArray($do_search);
@@ -90,7 +90,7 @@ class EmployeeTable extends WP_List_Table
   {
     $delete_nonce = wp_create_nonce( 'delete_employee' );
     $actions = array(
-      'delete'    => sprintf('<a href="?page=%s&action=%s&persId[]=%s&_wpnonce=%s">Löschen</a>', '' . esc_url($_REQUEST["page"]) . '', 'delete', esc_html($item['persId']),sanitize_text_field($delete_nonce)),
+      'delete'    => sprintf('<a href="?page=%s&action=%s&persId[]=%s&_wpnonce=%s">Löschen</a>', '' . sanitize_text_field($_REQUEST["page"]) . '', 'delete', esc_html($item['persId']), sanitize_text_field($delete_nonce)),
     );
 
     return sprintf(
@@ -130,10 +130,10 @@ class EmployeeTable extends WP_List_Table
         die( 'Go get a life script kiddies' );
       }
       else {
-      $delete_ids = esc_sql( $_GET['persId'] );
+      $delete_ids = $_GET['persId'];
             // loop over the array of record IDs and delete them
       foreach ( $delete_ids as $id ) {
-        CV_DB::deleteEmployees( $id );
+        CV_DB::deleteEmployees( sanitize_text_field($id) );
       }
       wp_redirect( esc_url( add_query_arg() ) );
       exit;

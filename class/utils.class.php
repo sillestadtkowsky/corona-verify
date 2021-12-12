@@ -14,6 +14,26 @@ class CV_UTILS
 		}
 	}
 
+	/**
+	 * Recursive sanitation for an array
+	 * 
+	 * @param $array
+	 *
+	 * @return mixed
+	 */
+	public static function recursive_sanitize_text_field($array) {
+		foreach ( $array as $key => &$value ) {
+			if ( is_array( $value ) ) {
+				$value = recursive_sanitize_text_field($value);
+			}
+			else {
+				$value = sanitize_text_field( $value );
+			}
+		}
+
+	return $array;
+	}
+
 	public static function isGueltig($expiredDate)
 	{
 		$now = CV_UTILS::getNow();
