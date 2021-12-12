@@ -80,8 +80,8 @@ class EmployeeTable extends WP_List_Table
 
   function usort_reorder($a, $b)
   {
-    $orderby = (!empty($_GET['orderby'])) ? esc_sql($_GET['orderby']) : 'lastname';
-    $order = (!empty($_GET['order'])) ? esc_sql($_GET['order']) : 'asc';
+    $orderby = (!empty($_GET['orderby'])) ? sanitize_text_field($_GET['orderby']) : 'lastname';
+    $order = (!empty($_GET['order'])) ? sanitize_text_field($_GET['order']) : 'asc';
     $testresult = strcmp($a[$orderby], $b[$orderby]);
     return ($order === 'desc') ? $testresult : -$testresult;
   }
@@ -90,7 +90,7 @@ class EmployeeTable extends WP_List_Table
   {
     $delete_nonce = wp_create_nonce( 'delete_employee' );
     $actions = array(
-      'delete'    => sprintf('<a href="?page=%s&action=%s&persId[]=%s&_wpnonce=%s">Lsssöschen</a>', '' . esc_url($_REQUEST["page"]) . '', 'delete', esc_html($item['persId']),sanitize_text_field($delete_nonce)),
+      'delete'    => sprintf('<a href="?page=%s&action=%s&persId[]=%s&_wpnonce=%s">Löschen</a>', '' . esc_url($_REQUEST["page"]) . '', 'delete', esc_html($item['persId']),sanitize_text_field($delete_nonce)),
     );
 
     return sprintf(
@@ -133,7 +133,7 @@ class EmployeeTable extends WP_List_Table
       $delete_ids = esc_sql( $_GET['persId'] );
             // loop over the array of record IDs and delete them
       foreach ( $delete_ids as $id ) {
-        echo ''. CV_DB::deleteEmployees( $id );
+        CV_DB::deleteEmployees( $id );
       }
       wp_redirect( esc_url( add_query_arg() ) );
       exit;

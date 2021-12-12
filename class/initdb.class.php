@@ -17,14 +17,9 @@ class CV_INITDB{
         $installed_ver = $options->readOption(CV_OPTIONS::C_DB_VERSION);
 
         if ( $installed_ver === CV_INITDB::DB_VERSION ) {
-            echo 'create NO tables ';
         }else{
-            echo 'create tables ';
-      
             $intiDbClass->createEmployee();
-
             $intiDbClass->createTestForEmployee();
-        
             $intiDbClass->setDefaultOptions();
         }
     }

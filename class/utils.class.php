@@ -3,7 +3,7 @@ class CV_UTILS
 {
 	public static function debugCode($message){
 		if (defined('WP_DEBUG') && true === WP_DEBUG) {
-			echo '<div class="debug">' .$message. '</div>';
+			echo esc_html( 'DEBUG_MESSAGE: ' . $message );
 		}
 	}
 

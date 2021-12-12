@@ -100,9 +100,7 @@ class TestViewTable extends WP_List_Table
   function column_cb($item)
   {
     return sprintf(
-      '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-      'id',  //Let's simply repurpose the table's singular label ("plugin")
-      $item['id']                //The value of the checkbox should be the record's id
+      '<input type="checkbox" name="%1$s[]" value="%2$s" />', 'id', $item['id'] 
     );
   }
 
@@ -123,7 +121,7 @@ class TestViewTable extends WP_List_Table
     if ( 'delete' === $this->current_action() ) {
       $delete_ids = esc_sql($_GET['id']);
       foreach ( $delete_ids as $id ) {
-        echo ''. CV_DB::deleteTestsForEmployees( $id );
+        CV_DB::deleteTestsForEmployees( $id );
       }
       wp_redirect( esc_url( add_query_arg() ) );
       exit;

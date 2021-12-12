@@ -1,0 +1,85 @@
+/*******************************
+Corona-Verify Admin Styles
+********************************/
+ 
+input:invalid+span:after {
+    content: '✖';
+    padding-left: 5px;
+}
+  
+input:valid+span:after {
+    content: '✓';
+    padding-left: 5px;
+}
+
+.tableContainer {
+    overflow-y: scroll;
+    margin: 10px 0 10px 0;
+}
+
+.divTable {
+    display: table;
+    position: relative;
+    width: 50vw;
+}
+
+.divRow {
+    display: table-row;
+}
+
+.divCell {
+    display: table-cell;
+    padding: 10px;
+    background-color: white;
+}
+
+.header {
+    font-weight: bold;
+    background-color: lightgray !important;
+}
+
+.headerRow {
+    background-color: lightgray !important;
+}
+.option_info{
+    padding: 10px 0 10px 0;
+}
+
+.success {
+    font-size: 1.3em;
+    padding: 10px;
+    background-color: green;
+    color: white;
+}
+
+.collapse {
+    border-collapse: collapse;
+}
+
+.corona-mitarbeiter-container {
+    min-width: 50%;
+}
+
+.corona-txt {
+    display: block;
+    font-size: 1.2em;
+    margin: 20px;
+}
+
+.corona-txt:after {
+    clear: both;
+    display: block;
+    overflow: hidden;
+    content: ""
+}
+
+.corona-txt>label {
+    float: left;
+    width: 180px;
+}
+
+.corona-txt>input {
+    border: 1px solid #ccc;
+    padding: 8px 5px;
+    width: 300px;
+}
