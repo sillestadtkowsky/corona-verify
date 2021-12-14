@@ -84,7 +84,7 @@ function corona_verify_shortcode($atts, $content = null, $tag = '')
                     $html .= '<div class="expired">';
                     $html .= '<b>Dieser Link ist nicht mehr gültig</b>';
                   }
-                  $html .= '</div></div><div></div></div>';
+                  $html .= '</div></div>';
   }
   
   echo $html;

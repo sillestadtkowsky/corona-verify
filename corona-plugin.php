@@ -30,7 +30,6 @@ require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/inc/wp-enqueue.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/main/shortcode.php';
 
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/excel.class.php';
-require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/updater.class.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/db.class.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/utils.class.php';
 require_once CORONA_TEST_VERIFY_PLUGIN_PLUGIN_DIR . '/class/secure.class.php';
