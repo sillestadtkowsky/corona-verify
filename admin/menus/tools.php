@@ -1,7 +1,8 @@
 <?php
-
-    function viewAdminTools(){
-        $html = '<div class="wrap"><h3>Nutzung</h3></div>
+    function viewAdminTools()
+    {
+        ?>
+        <div class="wrap"><div class ="admin-view"><div class ="admin-container"><h3>Nutzung</h3>
         <table class="form-table">
             <tbody>
             <tr class="cv_shortcode">
@@ -12,7 +13,7 @@
                 </td>
             </tr>
             </tbody>
-        </table>';
-
-        return $html;
+        </table>
+        </div></div></div>
+        <?php
     }

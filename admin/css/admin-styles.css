@@ -83,3 +83,14 @@ input:valid+span:after {
     padding: 8px 5px;
     width: 300px;
 }
+.admin-view{
+    position: absolute;
+}
+.admin-container{
+    display: grid;
+    margin: 10px;
+    padding: 10px;
+}
+.tab-content {
+    margin-top: 30px;
+ }

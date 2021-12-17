@@ -20,10 +20,12 @@ add_action('admin_menu', 'corona_menu_creator');
 */
 function corona_admin_home()
 {
-  $html = '';
-  $html .= '<div class="wrap">';
-  $html .= '<h1>Willkommen im Corona Verify Admin Dashboard</h1>';
-  $html .= '</div>';
+  ?>
+  <div class="wrap">
+  <h1>Willkommen im Corona Verify Admin Dashboard</h1>
+  </div>
+  
+  <?php  
   $options = new CV_OPTIONS();
 
   // check user capabilities
@@ -34,35 +36,34 @@ function corona_admin_home()
 //Get the active tab from the $_GET param
 $default_tab = null;
 $tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : $default_tab;
-$requestPage = sanitize_text_field($_REQUEST["page"]);
 
-$html .= '<nav class="nav-tab-wrapper" style="margin-top:20px;">
-            <a href="?page=' . sanitize_text_field( $requestPage ) . '&tab=settings" class="nav-tab ';
-            if($tab==="settings" || $tab==null){
-              $html .= 'nav-tab-active">';
+?>
+<nav class="nav-tab-wrapper" style="margin-top:20px;">
+  <a href="?page=<?php echo sanitize_text_field($_REQUEST["page"])?>&tab=settings" class="nav-tab ';
+      <?php  if($tab==="settings" || $tab==null){
+              echo 'nav-tab-active">Einstellungen</a>';
             }else{
-              $html .= '"> ';
+              echo  '">Einstellungen</a>';
             }
-            $html .= 'Einstellungen</a>
-              
-            <a href="?page='. sanitize_text_field( $requestPage ) .'&tab=tools" class="nav-tab ';
-            if($tab==="tools"){
-              $html .= 'nav-tab-active">';
-            }else{
-              $html .= '"> ';
-            }
-            $html .= 'Werkzeuge</a></nav>';
-
-            $html .= '<div class="tab-content">';
-              switch($tab) :
-                case 'tools':
-                  $html .= viewAdminTools();
-                  break;
-                default:
-                  $html .= viewAdminOptions();
-              endswitch;
-            $html .= '</div>';
-
-    echo $html;
+      ?>   
+    <a href="?page=<?php echo sanitize_text_field($_REQUEST["page"])?>&tab=tools" class="nav-tab ';
+        <?php   if($tab==="tools" || $tab==null){
+                  echo 'nav-tab-active">Werkzeuge</a>';
+                }else{
+                  echo  '">Werkzeuge</a>';
+                }
+        ?>  
+    <div class="tab-content">
+      <?php   
+        switch($tab) :
+          case 'tools':
+            echo viewAdminTools();
+            break;
+          default:
+          echo  viewAdminOptions();
+        endswitch;
+      ?> 
+    </div>
+  <?php 
 }
 
